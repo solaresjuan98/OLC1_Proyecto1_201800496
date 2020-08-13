@@ -2,10 +2,13 @@ from tkinter import *
 #from tkinter import messasebox as MessageBox
 from io import open
 from tkinter import filedialog
+import os
 
 # función para abrir archivo de texto
 
 textoArchivo = ""
+
+
 def abrirArchivo():
     # ABRIENDO ARCHIVO
     filename = filedialog.askopenfilename(
@@ -13,17 +16,26 @@ def abrirArchivo():
         filetypes=(("archivos javascript", "*.js"), ("archivos HTML", "*.html"), ("archivos CSS", "*.css")))
     # imprime la ruta
     ruta = filename
-    print(ruta)
+    # print(filename)
+    split_ = os.path.splitext(filename)
+    #print("Extensión del archivo '% s': " %filename, split_[1], "\n")
+    extension = split_[1]
+    # print(extension)
 
     try:
         with open(filename, 'r') as UseFile:
             textoArchivo = UseFile.read()
             textoEntrada.insert(INSERT, textoArchivo)
-            #print(UseFile.read())
+            # print(UseFile.read())
 
     except:
         print("El archivo no existe.")
 
+def limpiarCajaTexto():
+    textoEntrada.delete('1.0', END)
+
+def analizarEntrada(entrada, extension):
+    pass
 
 ventana = Tk()
 ventana.title("OLC PROYECTO 1 - 201800496")
@@ -79,9 +91,16 @@ textoSalida.config(width=60, height=35, font=("Consolas", 9),
 
 
 # BOTONES
+
+botonAnalizar = Button(ventana, text="Analizar")
+botonAnalizar.place(x=780, y=10)
+botonAnalizar.config(padx=3, pady=3, font=(
+    "sans-serif", 10))
+
 botonBorrar = Button(ventana, text="Borrar")
 botonBorrar.place(x=850, y=10)
-botonBorrar.config(padx=3, pady=3, font=("sans-serif", 10))
+botonBorrar.config(padx=3, pady=3, font=(
+    "sans-serif", 10), command=limpiarCajaTexto)
 
 
 ventana.mainloop()
