@@ -20,8 +20,7 @@ def abrirArchivo():
     split_ = os.path.splitext(filename)
     #print("Extensión del archivo '% s': " %filename, split_[1], "\n")
     extension = split_[1]
-    # print(extension)
-
+    labelFormato.config(text=extension)
     try:
         with open(filename, 'r') as UseFile:
             textoArchivo = UseFile.read()
@@ -31,11 +30,24 @@ def abrirArchivo():
     except:
         print("El archivo no existe.")
 
+
 def limpiarCajaTexto():
     textoEntrada.delete('1.0', END)
 
-def analizarEntrada(entrada, extension):
-    pass
+
+def analizarEntrada():
+    # atrapa la extensión del archivo
+    ext = labelFormato['text']
+
+    if ext == ".js":
+        print("Es un archivo javascript")
+    elif ext == ".css":
+        print("Es un archivo CSS")
+    elif ext == ".html":
+        print("Es un archivo HTML")
+    else:
+        print("Formato no permitido")
+
 
 ventana = Tk()
 ventana.title("OLC PROYECTO 1 - 201800496")
@@ -78,6 +90,10 @@ labelTitulo = Label(ventana, text="Editor de texto")
 labelTitulo.place(x=10, y=10)
 labelTitulo.config(padx=5, pady=5, font=("sans-serif", 10))
 
+labelFormato = Label(ventana, text="")
+labelFormato.place(x=120, y=10)
+labelFormato.config(padx=5, pady=5, font=("sans-serif", 10))
+
 textoEntrada = Text(ventana)
 textoEntrada.place(x=10, y=60)
 textoEntrada.config(width=65, height=35, font=("Consolas", 9),
@@ -95,7 +111,7 @@ textoSalida.config(width=60, height=35, font=("Consolas", 9),
 botonAnalizar = Button(ventana, text="Analizar")
 botonAnalizar.place(x=780, y=10)
 botonAnalizar.config(padx=3, pady=3, font=(
-    "sans-serif", 10))
+    "sans-serif", 10), command=analizarEntrada)
 
 botonBorrar = Button(ventana, text="Borrar")
 botonBorrar.place(x=850, y=10)
