@@ -12,7 +12,7 @@ textoArchivo = ""
 def abrirArchivo():
     # ABRIENDO ARCHIVO
     filename = filedialog.askopenfilename(
-        initialdir="c://", title="Seleccionar archivo",
+        initialdir="C://Users//jsola//Desktop", title="Seleccionar archivo",
         filetypes=(("archivos javascript", "*.js"), ("archivos HTML", "*.html"), ("archivos CSS", "*.css")))
     # imprime la ruta
     ruta = filename

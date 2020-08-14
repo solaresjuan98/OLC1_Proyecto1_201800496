@@ -27,6 +27,7 @@ class AnalizadorLexicocss():
         char = ""
 
         for letra in range(len(entrada)):
+
             if estado == 0:
                 char += entrada[letra]
                 print("Estoy en estado 0")
@@ -38,5 +39,16 @@ class AnalizadorLexicocss():
                 print("Estoy en estado 1")
                 if entrada[letra] == "*":
                     print("lei un asterisco")
+                    estado = 2
                 elif entrada[letra] ==" ":
                     print("lei un espacio")
+
+            elif estado == 2:
+                print("Estoy en estado 2")
+                if entrada[letra].isalpha():
+                    print("Lei una letra")
+                elif entrada[letra].isdigit():
+                    print("Lei un numero")
+                elif entrada[letra] == " ":
+                    print("")
+
