@@ -1,6 +1,4 @@
 import enum
-
-
 class Tokencss(enum.Enum):
     # selectores
     """ palabras reservadas de html como p, h1, *(universal), ID, clases, pseudoclases div etc...
@@ -17,4 +15,17 @@ class Tokencss(enum.Enum):
         # - numeros hexadecimales de colores
         # - URL
         # - cadenas
-    pass
+    
+    SELECTOR = "Selector"
+
+    def __init__(self, Token, Valor):
+        super().__init__()
+
+        self.Token = ""
+        self.Valor = ""
+
+    def ObtenerTipoTokenCSS(self):
+        return self.Token
+
+    def ObtenerValor(self):
+        return self.Valor

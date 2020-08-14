@@ -1,9 +1,9 @@
 from tkinter import *
-#from tkinter import messasebox as MessageBox
+from tkinter import messagebox as MessageBox
 from io import open
 from tkinter import filedialog
 import os
-
+from Analizadores.AnalizadorLexicocss import *
 # función para abrir archivo de texto
 
 textoArchivo = ""
@@ -43,10 +43,15 @@ def analizarEntrada():
         print("Es un archivo javascript")
     elif ext == ".css":
         print("Es un archivo CSS")
+        entrada = textoEntrada.get("1.0", "end-1c")
+        MessageBox.showinfo("Aviso", "Analisis del archivo CSS iniciado.")
+        analizadorCSS = AnalizadorLexicocss()
+        analizadorCSS.Escanear(entrada)
+
     elif ext == ".html":
         print("Es un archivo HTML")
     else:
-        print("Formato no permitido")
+        print("Formato no permitido / archivo no cargado")
 
 
 ventana = Tk()
