@@ -41,7 +41,11 @@ class AnalizadorLexicocss():
                     char += entrada[letra]
                     estado = 4
                 ##
-
+                elif entrada[letra] == "%":
+                    print("Error")
+                ##
+                elif entrada[letra] == "$":
+                    print("Error")
             ##
             elif estado == 1:
                 print("Estoy en estado 1")
@@ -247,7 +251,7 @@ class AnalizadorLexicocss():
                 elif entrada[letra] == "_":
                     char += entrada[letra]
                     print("")
-                else: #aceptar el ID o detectar el error lexico
+                else:  # aceptar el ID o detectar el error lexico
                     self.listaTokens.append(char)
                     print(char)
                     print("Lectura de ID finalizada")
