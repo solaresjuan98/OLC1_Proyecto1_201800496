@@ -22,7 +22,9 @@ class Tokencss(Enum):
     # - cadenas
 
     PROPIEDAD = "Propiedad"
-    SELECTOR = "Selector"
+    SELECTOR_UNIVERSAL = "Selector universal"
+    SELECTOR_CLASE = "Selector de clase"
+    SELECTOR_ID = "Selector de id"
     COMENTARIO = "Comentario"
     UNIDAD_MEDIDA = "Unidad de medida"
     URL = "url"
@@ -50,7 +52,10 @@ class AnalizadorLexicocss():
 
         self.auxLex = ""
         self.listaTokens = []
+        self.listaErroresLex = []
         self.estado = 0
+        self.fila = 0
+        self.columna = 0
 
     def ClasificarToken(self):
         # Clasificar los tokens de la lista
@@ -81,6 +86,17 @@ class AnalizadorLexicocss():
                 elif entrada[letra].isalpha():
                     cadena += entrada[letra]
                     estado = 4
+                ##
+                #elif entrada[letra] == "#" or entrada[letra] == ".":
+                #    cadena += entrada[letra]
+                #    (Analizar por separado en una funcion? / crear otros estado que lo analice por separado)
+                #    estado = 5
+                ##
+                elif entrada[letra] == "*":
+                    cadena+= entrada[letra]
+                    token_ = Tokencss(Tokencss.SELECTOR_UNIVERSAL)
+                    self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
+                    cadena = ""
                 ##
                 elif entrada[letra] == "%":
                     print("Error")
@@ -275,8 +291,7 @@ class AnalizadorLexicocss():
                 print(cadena)
                 print("Lectura de comentario finalizada")
                 token_ = Tokencss(Tokencss.COMENTARIO)
-                self.listaTokens.append(
-                    [token_.ObtenerTipoTokenCSS(), cadena])
+                self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
                 cadena = ""
                 estado = 0
             ##
@@ -297,9 +312,14 @@ class AnalizadorLexicocss():
                 else:  # aceptar el ID o detectar el error lexico
                     # print(cadena)
                     self.AgregarToken(cadena)
-                    print("Lectura de ID finalizada")
                     cadena = ""
                     estado = 0
+            ##
+            elif estado == 5:
+                if entrada[letra].isalpha():
+                    cadena += entrada
+                    estado = 4
+            ##
 
     ####################
 
@@ -451,7 +471,9 @@ class AnalizadorLexicocss():
         elif token == "pc":
             token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
-    
+        else:
+            token_ = Tokencss(Tokencss.SELECTOR_CLASE)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
     def ImprimirListaTokens(self):
         lista = self.listaTokens
