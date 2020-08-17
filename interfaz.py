@@ -47,6 +47,7 @@ def analizarEntrada():
         MessageBox.showinfo("Aviso", "Analisis del archivo CSS iniciado.")
         analizadorCSS = AnalizadorLexicocss()
         analizadorCSS.Escanear(entrada)
+        analizadorCSS.ImprimirListaTokens()
 
     elif ext == ".html":
         print("Es un archivo HTML")

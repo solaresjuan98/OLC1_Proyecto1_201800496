@@ -1,6 +1,47 @@
 
 #from Tokencss import *
 #from tkinter import messagebox as MessageBox
+from enum import Enum
+
+
+class Tokencss(Enum):
+    # selectores
+    """ palabras reservadas de html como p, h1, *(universal), ID, clases, pseudoclases div etc...
+        reglas con <DIV>...
+    """
+    # reglas (palabras reservadas), puede tener o no el ';' al final
+    # comentarios
+    # propiedades
+    # delimitadores
+    # valores
+    # - unidades de medida
+    # - ID y numeros
+    # - porcentajes
+    # - numeros hexadecimales de colores
+    # - URL
+    # - cadenas
+
+    PROPIEDAD = "Propiedad"
+    SELECTOR = "Selector"
+    COMENTARIO = "Comentario"
+    UNIDAD_MEDIDA = "Unidad de medida"
+    URL = "url"
+    PORCENTAJE = "Porcentaje"
+    COLOR = "Color"
+    CADENA = "Cadena"
+    IDENTIFICADOR = "Identificador"
+    NUMERO = "Numero"
+
+    def __init__(self, token):
+        super().__init__()
+
+        self.Token = token
+
+    def ObtenerTipoTokenCSS(self):
+        return self.Token
+
+#####
+
 
 class AnalizadorLexicocss():
 
@@ -24,7 +65,7 @@ class AnalizadorLexicocss():
     def Escanear(self, entrada):
         # Recorrer texto de entrada
         estado = self.estado
-        char = ""
+        cadena = ""
 
         for letra in range(len(entrada)):
 
@@ -34,11 +75,11 @@ class AnalizadorLexicocss():
 
                 # LEYENDO COMENTARIOS DE UNA O MAS LINEAS
                 if entrada[letra] == "/":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 1
                 ##
                 elif entrada[letra].isalpha():
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 4
                 ##
                 elif entrada[letra] == "%":
@@ -51,28 +92,28 @@ class AnalizadorLexicocss():
                 print("Estoy en estado 1")
                 if entrada[letra] == "*":
                     print("lei un asterisco")
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 2
                 ##
                 elif entrada[letra] == " ":
                     print("lei un espacio")
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 2
                 ##
 
                 elif entrada[letra] == "\"":
                     print("Lei comillas dobles")
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 2
                 ##
                 elif entrada[letra] == "\n":
                     print("Lei un salto de linea")
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 2
                 ##
                 elif entrada[letra] == "/":
                     print("Lei una diagonal")
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     estado = 3
             ##
             elif estado == 2:
@@ -80,180 +121,339 @@ class AnalizadorLexicocss():
 
                 # LETRAS Y NUMEROS
                 if entrada[letra].isalpha():
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una letra")
                 ##
                 elif entrada[letra].isdigit():
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un numero")
                 ##
                 elif entrada[letra] == " ":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un espacio")
 
                 # SIGNOS DE PUNTUACION
                 elif entrada[letra] == ".":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un punto")
                 ##
                 elif entrada[letra] == ",":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una coma")
                 ##
                 elif entrada[letra] == ":":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei dos puntos")
                 ##
                 elif entrada[letra] == ";":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei punto y coma")
 
                 # SIMBOLOS DE AGRUPACION
                 elif entrada[letra] == "(":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei parentesis izq")
                 ##
                 elif entrada[letra] == ")":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei parentesis der")
                 ##
                 elif entrada[letra] == "<":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei bracket izq")
                 ##
                 elif entrada[letra] == ">":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei bracket der")
                 ##
                 elif entrada[letra] == "{":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei parentesis izq")
                 ##
                 elif entrada[letra] == "}":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei parentesis der")
                 ##
                 elif entrada[letra] == "[":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei corchete izq")
                 ##
                 elif entrada[letra] == "]":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei corchete der")
 
                 # GUIONES
                 elif entrada[letra] == "-":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un guión")
                 ##
                 elif entrada[letra] == "_":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un guion bajo")
                 ##
 
                 # OPERADORES
                 elif entrada[letra] == "+":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo más")
                 ##
                 elif entrada[letra] == "=":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo igual")
                 ##
 
                 # SIGNOS DE INTERROGACION/EXCLAMACIÓN
                 elif entrada[letra] == "!":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo exlamación")
                 ##
                 elif entrada[letra] == "¡":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo exclamación")
                 ##
                 elif entrada[letra] == "¿":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo interrogación")
                 ##
                 elif entrada[letra] == "?":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo interrogación")
                 ##
 
                 # SIMBOLOS
                 elif entrada[letra] == "@":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un arroba")
                 ##
                 elif entrada[letra] == "$":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo de dolar")
                 ##
                 elif entrada[letra] == "^":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo de potencia")
                 ##
                 elif entrada[letra] == "%":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo de porcentaje")
                 ##
                 elif entrada[letra] == "&":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un signo aspersand")
                 ##
                 elif entrada[letra] == "\n":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un salto de linea")
                 ##
                 elif entrada[letra] == "\t":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una tabulación")
                 ##
                 elif entrada[letra] == "|":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un pipe")
                 ##
                 elif entrada[letra] == "°":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una orden")
                 ##
                 elif entrada[letra] == "¬":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un simbolo raro")
                 ##
                 elif entrada[letra] == "'":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una comilla simple")
                 ##
                 elif entrada[letra] == "*":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un asterisco")
                     estado = 1
             ##
             elif estado == 3:
                 # ESTADO DE ACEPTACIÓN
-                self.listaTokens.append(char)
-                print(char)
+                print(cadena)
                 print("Lectura de comentario finalizada")
-                char = ""
+                token_ = Tokencss(Tokencss.COMENTARIO)
+                self.listaTokens.append(
+                    [token_.ObtenerTipoTokenCSS(), cadena])
+                cadena = ""
                 estado = 0
             ##
             elif estado == 4:
 
                 if entrada[letra].isalpha():
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei una letra")
                 elif entrada[letra].isdigit():
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un numero")
                 elif entrada[letra] == "-":
-                    char += entrada[letra]
+                    cadena += entrada[letra]
                     print("Lei un guion")
                 elif entrada[letra] == "_":
-                    char += entrada[letra]
-                    print("")
+                    cadena += entrada[letra]
+                    print("Lei un guion bajo")
                 else:  # aceptar el ID o detectar el error lexico
-                    self.listaTokens.append(char)
-                    print(char)
+                    # print(cadena)
+                    self.AgregarToken(cadena)
                     print("Lectura de ID finalizada")
-                    char = ""
+                    cadena = ""
                     estado = 0
+
+    ####################
+
+    def AgregarToken(self, token):
+
+        if token == "h1":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+
+        # RECONOCIENDO PROPIEDADES
+        elif token == "color":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "border":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "text-align":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "font-weight":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "padding-left":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "padding-top":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "line-height":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin-top":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin-left":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "display":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "top":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "float":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "min-width":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "background-color":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "Opacity":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "font-family":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "font-size":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "padding-right":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "padding":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin-right":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "width":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "position":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "right":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "clear":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "max-height":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "background-image":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "font-style":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "font":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "padding-bottom":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "border-style":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "bottom":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "left":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "max-width":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "min-height":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+
+        ######## VALORES ########
+        # Unidades de medida
+        elif token == "px":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "em":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "vh":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "background-image":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "background-image":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "vw":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "in":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "cm":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "mm":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "pt":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "pc":
+            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+    
+
+    def ImprimirListaTokens(self):
+        lista = self.listaTokens
+        for token in lista:
+            print(token)
