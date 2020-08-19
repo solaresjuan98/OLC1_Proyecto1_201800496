@@ -33,6 +33,7 @@ class Tokencss(Enum):
     CADENA = "Cadena"
     IDENTIFICADOR = "Identificador"
     NUMERO = "Numero"
+    URL_ = "Url"
 
     def __init__(self, token):
         super().__init__()
@@ -73,8 +74,9 @@ class AnalizadorLexicocss():
         cadena = ""
 
         for letra in range(len(entrada)):
-
+            
             if estado == 0:
+                cadena = ""
                 print("Estoy en estado 0")
                 range(len(entrada) - 1)
 
@@ -87,9 +89,13 @@ class AnalizadorLexicocss():
                     cadena += entrada[letra]
                     estado = 4
                 ##
-                #elif entrada[letra] == "#" or entrada[letra] == ".":
+                elif entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                    estado = 5
+                ##
+                #elif entrada[letra] == ".":
                 #    cadena += entrada[letra]
-                #    (Analizar por separado en una funcion? / crear otros estado que lo analice por separado)
+                    #(Analizar por separado en una funcion? / crear otros estado que lo analice por separado)
                 #    estado = 5
                 ##
                 elif entrada[letra] == "*":
@@ -316,10 +322,33 @@ class AnalizadorLexicocss():
                     estado = 0
             ##
             elif estado == 5:
+                numero = ""
+                print("estoy en estado 5")
+                if entrada[letra].isdigit():
+                    numero += entrada
+                else:
+                    ##print(cadena)
+                    #cadena = ""
+                    token_ = Tokencss(Tokencss.NUMERO)
+                    self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
+                    numero = ""
+                    #range(len(entrada) - 1)
+                    estado = 0
+            ##
+            elif estado == 6:
                 if entrada[letra].isalpha():
                     cadena += entrada
-                    estado = 4
-            ##
+                elif entrada[letra].isdigit():
+                    cadena += entrada
+                elif cadena[letra] == "-":
+                    cadena += entrada
+                elif cadena[letra] == "_":
+                    cadena += entrada
+                
+                elif cadena[letra] == "{" or " ":
+                    self.listaTokens.append(["ID/Clase", cadena])
+                    cadena = ""
+                    estado = 0
 
     ####################
 
@@ -434,6 +463,9 @@ class AnalizadorLexicocss():
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "min-height":
             token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "url":
+            token_ = Tokencss(Tokencss.URL_)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
         ######## VALORES ########
