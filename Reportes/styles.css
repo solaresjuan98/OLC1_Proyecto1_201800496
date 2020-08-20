@@ -1,0 +1,161 @@
+body{
+    
+    font-family: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #282c34;
+}
+
+/*Estilos generales*/
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.center{
+    width: 75%;
+    margin: 0px auto;
+}
+
+.clearfix{
+    clear: both;
+    float: none;
+}
+
+/*ESTILOS DEL HEADER*/
+#header{
+    display: block;
+    background-color: #0A475B;
+    color: white;
+    width: 100%;
+    height: 95px;
+}
+
+#logo{
+    float: left;
+    width: 30%;
+    padding: 25px;
+    margin-left: 55px;
+}
+
+/* Estilos del menú del header */
+#menu{
+    float: right;
+    padding: 20px;
+}
+
+#menu ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 10px;
+}
+
+#menu ul li a{
+    display: block;
+    text-decoration: none;
+    color: white;
+    transition: all 300ms;
+}
+
+#menu ul li a:hover{
+    text-decoration: none;
+    color: white;
+    transform: scale(1.1, 1.1);
+}
+
+
+
+#content{
+    display: block;
+    padding: 30px;
+    margin: 0px auto;
+    width: 75%;
+    height: 450px;
+    /*border: 1px black dashed;*/
+    overflow: hidden;
+}
+
+.subtitle{
+    font-size: 35px;
+}
+
+#content h2{
+    color: white;
+}
+
+
+/* Tarjetas de tareas */
+.card{
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    line-height: 25px;
+    margin-bottom: 15px;
+    transition: 300ms all;
+    
+}
+
+.card:hover{
+    box-shadow: 0px 1px 0px #5B0993, 1px 2px 0px #5B0993, 2px 3px 0px #5B0993, 3px 4px 0px #5B0993;
+}
+
+/*Estilos de la tabla de errores*/
+.card{
+    width: 100%;
+}
+
+.card th{
+    background-color: #0A475B;
+    border: 0px;
+}
+
+/*ESTILOS DE LA CAJA DEL LOGIN */
+.principal-title h1{
+    margin: 0px auto;
+}
+
+#login{
+    display: flex;
+    width: 30%;
+    height: 275px;
+    justify-content: center;
+    align-items: center;
+    margin: 0px auto;
+    margin-top: 100px;
+    background: #ccc;
+    box-shadow: 0px 1px 0px #8fa59e, 1px 2px 0px #8fa59e, 2px 3px 0px #8fa59e, 3px 4px 0px #8fa59e;
+}
+
+
+.login-form h5{
+    color: white;
+    background: #ccc;
+}
+
+input[type="text"],
+input[type="password"]{
+    width: 60%;
+    height: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+input[type="submit"]{
+    background-color: rgb(11, 116, 236);
+    height: 30px;
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Mulish';
+    transition: 300ms all;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus{
+    color: #555;
+    box-shadow: 1px 1px 1px gray inset;
+}
+
+input[type="submit"]:hover{
+    cursor: pointer;
+    background: #555;
+}

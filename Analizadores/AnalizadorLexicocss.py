@@ -34,6 +34,7 @@ class Tokencss(Enum):
     IDENTIFICADOR = "Identificador"
     NUMERO = "Numero"
     URL_ = "Url"
+    PUNTO_Y_COMA = "Punto y coma"
 
     def __init__(self, token):
         super().__init__()
@@ -54,6 +55,7 @@ class AnalizadorLexicocss():
         self.auxLex = ""
         self.listaTokens = []
         self.listaErroresLex = []
+        self.salida = ""
         self.estado = 0
         self.fila = 0
         self.columna = 0
@@ -62,19 +64,26 @@ class AnalizadorLexicocss():
         # Clasificar los tokens de la lista
         pass
 
+    ####################
+
     def AgregarToken(self, Tokencss):
         #
         #token = Tokencss("ENTRADA", "hola")
         # print(self.listaTokens[:])
         pass
 
+    ####################
+
     def Escanear(self, entrada):
         # Recorrer texto de entrada
         estado = self.estado
         cadena = ""
+        numero = ""
+        fila = self.fila
+        col = self.columna
 
         for letra in range(len(entrada)):
-            
+
             if estado == 0:
                 cadena = ""
                 print("Estoy en estado 0")
@@ -93,15 +102,32 @@ class AnalizadorLexicocss():
                     cadena += entrada[letra]
                     estado = 5
                 ##
-                #elif entrada[letra] == ".":
-                #    cadena += entrada[letra]
-                    #(Analizar por separado en una funcion? / crear otros estado que lo analice por separado)
-                #    estado = 5
+                elif entrada[letra] == "\"":
+                    cadena += entrada[letra]
+                    print("Lei una comilla doble")
+                    estado = 6
+                ##
+                elif entrada[letra] == "'":
+                    cadena += entrada[letra]
+                    print("Lei una comilla simple")
+                    estado = 6
+                ##
+                elif entrada[letra] == "." or entrada[letra] == "#":
+                    cadena += entrada[letra]
+                    estado = 8
                 ##
                 elif entrada[letra] == "*":
-                    cadena+= entrada[letra]
+                    cadena += entrada[letra]
                     token_ = Tokencss(Tokencss.SELECTOR_UNIVERSAL)
-                    self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
+                    self.listaTokens.append(
+                        [token_.ObtenerTipoTokenCSS(), cadena])
+                    cadena = ""
+                ##
+                elif entrada[letra] == ";":
+                    cadena += entrada[letra]
+                    token_ = Tokencss(Tokencss.PUNTO_Y_COMA)
+                    self.listaTokens.append(
+                        [token_.ObtenerTipoTokenCSS(), cadena])
                     cadena = ""
                 ##
                 elif entrada[letra] == "%":
@@ -109,6 +135,12 @@ class AnalizadorLexicocss():
                 ##
                 elif entrada[letra] == "$":
                     print("Error")
+                ## 
+                elif entrada[letra] == "\n":
+                    print("Salto de linea")
+                ##
+                elif entrada[letra] == "\t":
+                    print("Tabulación")
             ##
             elif estado == 1:
                 print("Estoy en estado 1")
@@ -322,31 +354,57 @@ class AnalizadorLexicocss():
                     estado = 0
             ##
             elif estado == 5:
-                numero = ""
+                #numero = ""
                 print("estoy en estado 5")
                 if entrada[letra].isdigit():
-                    numero += entrada
+                    cadena += entrada[letra]
+                elif entrada[letra] == ".":
+                    cadena += entrada[letra]
                 else:
-                    ##print(cadena)
-                    #cadena = ""
+
                     token_ = Tokencss(Tokencss.NUMERO)
-                    self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
+                    self.listaTokens.append(
+                        [token_.ObtenerTipoTokenCSS(), cadena])
                     numero = ""
-                    #range(len(entrada) - 1)
+                    ##range(len(entrada) - 1)
                     estado = 0
             ##
             elif estado == 6:
                 if entrada[letra].isalpha():
-                    cadena += entrada
+                    cadena += entrada[letra]
                 elif entrada[letra].isdigit():
-                    cadena += entrada
-                elif cadena[letra] == "-":
-                    cadena += entrada
-                elif cadena[letra] == "_":
-                    cadena += entrada
-                
-                elif cadena[letra] == "{" or " ":
-                    self.listaTokens.append(["ID/Clase", cadena])
+                    cadena += entrada[letra]
+                elif entrada[letra] == "-":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "_":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "/":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "\\":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "\"" or entrada[letra] == "'":
+                    cadena += entrada[letra]
+                    estado = 7
+            ##
+            elif estado == 7:
+                token_ = Tokencss(Tokencss.CADENA)
+                self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
+                cadena = ""
+                estado = 0
+            ##
+            elif estado == 8:
+                if entrada[letra].isalpha():
+                    cadena += entrada[letra]
+                elif entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                elif entrada[letra] == "-":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "_":
+                    cadena += entrada[letra]
+                elif entrada[letra] == " ":
+                    token_ = Tokencss(Tokencss.SELECTOR_ID)
+                    self.listaTokens.append(
+                        [token_.ObtenerTipoTokenCSS(), cadena])
                     cadena = ""
                     estado = 0
 
@@ -507,7 +565,27 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.SELECTOR_CLASE)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
+    ####################
+
     def ImprimirListaTokens(self):
         lista = self.listaTokens
         for token in lista:
             print(token)
+
+    ####################
+
+    def GenerarBitcacora(self):
+        bitacora = self.salida
+
+        bitacora += "\t :: BITACORA DE RECORRIDO \n"
+
+        bitacora += " >> Recorrido por los estados aceptados"
+
+        bitacora += "\t :: LISTADO DE TOKENS ACEPTADOS: \n"
+        for token in self.listaTokens:
+            bitacora += token
+
+        bitacora += "\t :: LISTADO DE ERRORES LEXICOS \n"
+        # imprimir lista de errores
+
+    ####################

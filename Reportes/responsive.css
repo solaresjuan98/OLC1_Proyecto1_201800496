@@ -1,0 +1,69 @@
+
+@media(max-width: 1212px){
+    #login{
+       width: 75%;
+    }
+
+    #login input[type="text"],
+    #login input[type="password"],
+    #login input[type="submit"]{
+        width: 100%;
+    }
+
+}
+
+@media(max-width: 831px){
+    .center{
+        width: 85%;
+    }
+}
+
+@media(max-width: 737px){
+
+    .center{
+        width: 90%;
+    }
+    
+    #header{
+        display: block;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    
+}
+
+@media(max-width: 691px){
+
+    #header{
+        height: 140px;
+    }
+
+    .center{
+        width: 100%;
+    }
+}
+
+@media(max-width: 611px){
+    #menu,
+    #menu ul{
+        clear: both;
+        float: none;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        line-height: 43px;
+    }
+
+}
+
+@media(max-width: 515px){
+
+    #menu ul{
+        margin-right: 0;
+    }
+
+    #menu ul li{
+        margin: 5px;
+    }
+}
