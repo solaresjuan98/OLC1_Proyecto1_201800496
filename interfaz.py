@@ -7,7 +7,7 @@ from Analizadores.AnalizadorLexicocss import *
 # función para abrir archivo de texto
 
 textoArchivo = ""
-
+bitacora = ""
 
 def abrirArchivo():
     # ABRIENDO ARCHIVO
@@ -48,7 +48,7 @@ def analizarEntrada():
         analizadorCSS = AnalizadorLexicocss()
         analizadorCSS.Escanear(entrada)
         analizadorCSS.ImprimirListaTokens()
-
+        bitacora = analizadorCSS.GenerarBitacora()
     elif ext == ".html":
         print("Es un archivo HTML")
     else:
@@ -109,8 +109,8 @@ textoEntrada.insert(INSERT, textoArchivo)
 textoSalida = Text(ventana)
 textoSalida.place(x=505, y=60)
 textoSalida.config(width=60, height=35, font=("Consolas", 9),
-                   padx=5, pady=5, state=DISABLED)
-
+                   padx=5, pady=5)
+textoSalida.insert(INSERT, bitacora)
 
 # BOTONES
 
