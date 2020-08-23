@@ -74,16 +74,73 @@ class AnalizadorLexicocss():
 
     ####################
 
+    def partirLexNumero(self, lexema):
+
+        print(lexema)
+        #aux ="100px"
+        #aux = lexema
+        subestado = 0
+        pre = ""
+        final = ""
+
+        ## concatena el pentultimo y ultimo caracter del lexema
+        final += lexema[-2]
+        final += lexema[-1]
+        pre = lexema.replace("px", "")
+        ## agregar numero
+        token_numero = Tokencss(Tokencss.NUMERO)
+        self.listaTokens.append([token_numero.ObtenerTipoTokenCSS(), pre])
+        
+        unidad_medida = Tokencss(Tokencss.UNIDAD_MEDIDA)
+        
+        if final == "px":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "em":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "vh":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "em":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "vw":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "in":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "cm":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "mm":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "pt":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        elif final == "pc":
+            self.listaTokens.append([unidad_medida.ObtenerTipoTokenCSS(), final])
+        else:
+            ## no pasa nada
+            pass
+
+
+        print(pre)
+        print(final)
+
+    ####################
+
     def Escanear(self, entrada):
         # Recorrer texto de entrada
         estado = self.estado
         cadena = ""
         numero = ""
+        sufijo = ""
         fila = self.fila
         col = self.columna
 
         for letra in range(len(entrada)):
-
+            """
+                Estados de aceptación de tokens:
+                estado = 3 (comentario)
+                estado = 4 (palabra reservada)
+                estado = 5 (Digito y medida)
+                estado = 7 (Cadenas de texto, como urls)
+                estado = 8 (Selector ID o selector de clase)
+            """
             if estado == 0:
                 cadena = ""
                 print("Estoy en estado 0")
@@ -130,12 +187,33 @@ class AnalizadorLexicocss():
                         [token_.ObtenerTipoTokenCSS(), cadena])
                     cadena = ""
                 ##
+                elif entrada[letra] == "(":
+                    pass
+                ##
+                elif entrada[letra] == ")":
+                    pass
+                ##
+                elif entrada[letra] == "{":
+                    pass
+                ##
+                elif entrada[letra] == "}":
+                    pass
+                ##
+                elif entrada[letra] == "[":
+                    pass
+                ##
+                elif entrada[letra] == "]":
+                    pass
+                ##
+                elif entrada[letra] == ",":
+                    pass
+                ##
                 elif entrada[letra] == "%":
                     print("Error")
                 ##
                 elif entrada[letra] == "$":
                     print("Error")
-                ## 
+                ##
                 elif entrada[letra] == "\n":
                     print("Salto de linea")
                 ##
@@ -354,19 +432,20 @@ class AnalizadorLexicocss():
                     estado = 0
             ##
             elif estado == 5:
-                #numero = ""
+                # declarar prefijo (es la cadena que se esta leyendo) y sufijo
+                sufijo = ""
                 print("estoy en estado 5")
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                elif entrada[letra] == "%":
+                    cadena += entrada[letra]
+                elif entrada[letra].isalpha():
+                    cadena += entrada[letra]
                 else:
-
-                    token_ = Tokencss(Tokencss.NUMERO)
-                    self.listaTokens.append(
-                        [token_.ObtenerTipoTokenCSS(), cadena])
-                    numero = ""
-                    ##range(len(entrada) - 1)
+                    self.partirLexNumero(cadena)
+                    range(len(entrada) - 1)
                     estado = 0
             ##
             elif estado == 6:
