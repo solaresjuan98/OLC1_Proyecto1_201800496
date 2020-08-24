@@ -68,7 +68,6 @@ body{
     padding: 30px;
     margin: 0px auto;
     width: 75%;
-    height: 450px;
     /*border: 1px black dashed;*/
     overflow: hidden;
 }
@@ -100,6 +99,7 @@ body{
 /*Estilos de la tabla de errores*/
 .card{
     width: 100%;
+    height: 100%;
 }
 
 .card th{
