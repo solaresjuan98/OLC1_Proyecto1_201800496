@@ -22,6 +22,7 @@ class Tokencss(Enum):
     # - URL
     # - cadenas
 
+    SELECTOR = "Selector HTML"
     PROPIEDAD = "Propiedad"
     SELECTOR_UNIVERSAL = "Selector universal"
     SELECTOR_CLASE = "Selector de clase"
