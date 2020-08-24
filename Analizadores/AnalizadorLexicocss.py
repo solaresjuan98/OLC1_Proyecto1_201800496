@@ -22,7 +22,7 @@ class Tokencss(Enum):
     # - URL
     # - cadenas
 
-    SELECTOR = "Selector HTML"
+    SELECTOR = "Selector"
     PROPIEDAD = "Propiedad"
     SELECTOR_UNIVERSAL = "Selector universal"
     SELECTOR_CLASE = "Selector de clase"
@@ -61,6 +61,8 @@ class AnalizadorLexicocss():
         self.estado = 0
         self.fila = 1
         self.columna = 0
+
+    ####################
 
     def ClasificarToken(self):
         # Clasificar los tokens de la lista
@@ -148,8 +150,6 @@ class AnalizadorLexicocss():
         cadena = ""
         numero = ""
         sufijo = ""
-        # fila = self.fila
-        # col = self.columna
 
         for letra in range(len(entrada)):
             """
@@ -539,16 +539,16 @@ class AnalizadorLexicocss():
                 # ESTADO DE ACEPTACIÓN
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
-                    print("Lei una letra")
+                    #print("Lei una letra")
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
-                    print("Lei un numero")
+                    #print("Lei un numero")
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
-                    print("Lei un guion")
+                    #print("Lei un guion")
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
-                    print("Lei un guion bajo")
+                    #print("Lei un guion bajo")
                 else:  # aceptar el ID o detectar el error lexico
                     # print(cadena)
                     self.AgregarToken(cadena)
@@ -609,7 +609,7 @@ class AnalizadorLexicocss():
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
                 elif entrada[letra] == " ":
-                    token_ = Tokencss(Tokencss.SELECTOR_ID)
+                    token_ = Tokencss(Tokencss.SELECTOR)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenCSS(), cadena])
                     self.salida += "  Token identificador reconocido \n"
@@ -620,7 +620,35 @@ class AnalizadorLexicocss():
 
     def AgregarToken(self, token):
 
+        # SELECTORES HTML
         if token == "h1":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "h2":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "h3":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "h4":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "h5":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "p":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "div":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "ul":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "li":
+            token_ = Tokencss(Tokencss.SELECTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "a":
             token_ = Tokencss(Tokencss.SELECTOR)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
@@ -647,6 +675,9 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.PROPIEDAD)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "margin-top":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin-bottom":
             token_ = Tokencss(Tokencss.PROPIEDAD)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "margin-left":
@@ -683,6 +714,9 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.PROPIEDAD)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "margin-right":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "height":
             token_ = Tokencss(Tokencss.PROPIEDAD)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "width":
@@ -730,9 +764,90 @@ class AnalizadorLexicocss():
         elif token == "min-height":
             token_ = Tokencss(Tokencss.PROPIEDAD)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "border-top":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "background":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "solid":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "rgba":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "absolute":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "content":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "url":
             token_ = Tokencss(Tokencss.URL_)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "margin":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "display":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "overflow":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "border-radius":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "transition":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "box-shadow":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "cursor":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "clear":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "type":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "focus":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "clear":
+            token_ = Tokencss(Tokencss.PROPIEDAD)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+
+        ######## COLORES ########
+        elif token == "white":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "red":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "blue":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "black":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "gray":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "green":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "yellow":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "orange":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+        elif token == "aqua":
+            token_ = Tokencss(Tokencss.COLOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
+
 
         ######## VALORES ########
         # Unidades de medida
@@ -743,12 +858,6 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "vh":
-            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
-            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
-        elif token == "background-image":
-            token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
-            self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
-        elif token == "background-image":
             token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         elif token == "vw":
@@ -770,7 +879,7 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.UNIDAD_MEDIDA)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
         else:
-            token_ = Tokencss(Tokencss.SELECTOR_CLASE)
+            token_ = Tokencss(Tokencss.IDENTIFICADOR)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
     ####################
