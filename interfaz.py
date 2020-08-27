@@ -3,11 +3,14 @@ from tkinter import messagebox as MessageBox
 from io import open
 from tkinter import filedialog
 import os
+# Analizadores
 from Analizadores.AnalizadorLexicocss import *
+from Analizadores.AnalizadorLexicoJS import *
 # función para abrir archivo de texto
 
 textoArchivo = ""
 bitacora = ""
+
 
 def abrirArchivo():
     # ABRIENDO ARCHIVO
@@ -33,6 +36,7 @@ def abrirArchivo():
 
 def limpiarCajaTexto():
     textoEntrada.delete('1.0', END)
+    textoSalida.delete('1.0', END)
 
 
 def analizarEntrada():
@@ -40,20 +44,26 @@ def analizarEntrada():
     ext = labelFormato['text']
 
     if ext == ".js":
-        print("Es un archivo javascript")
+        #print("Es un archivo javascript")
+        entrada = textoEntrada.get("1.0", "end-1c")
+        MessageBox.showinfo(
+            "Aviso", "Analisis del archivo JavaScript iniciado")
+        analizadorJS = AnalizadorLexicoJS()
+        analizadorJS.Escanear(entrada)
+        analizadorJS.ImprimirListaTokens()
     elif ext == ".css":
-        print("Es un archivo CSS")
+        #print("Es un archivo CSS")
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo("Aviso", "Analisis del archivo CSS iniciado.")
         analizadorCSS = AnalizadorLexicocss()
         analizadorCSS.Escanear(entrada)
-        print()
         analizadorCSS.ImprimirListaTokens()
-        print()
         analizadorCSS.ImprimirListaErrores()
         analizadorCSS.GenerarReporte()
-        #bitacora = analizadorCSS.GenerarBitacora()
-        #print(analizadorCSS.CantidadLineas())
+        bitacora = analizadorCSS.GenerarBitacora()
+        textoSalida.insert(INSERT, bitacora)
+        # print(bitacora)
+        # print(analizadorCSS.CantidadLineas())
     elif ext == ".html":
         print("Es un archivo HTML")
     else:
@@ -115,7 +125,6 @@ textoSalida = Text(ventana)
 textoSalida.place(x=505, y=60)
 textoSalida.config(width=60, height=35, font=("Consolas", 9),
                    padx=5, pady=5)
-textoSalida.insert(INSERT, bitacora)
 
 # BOTONES
 

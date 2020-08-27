@@ -61,8 +61,6 @@ body{
     transform: scale(1.1, 1.1);
 }
 
-
-
 #content{
     display: block;
     padding: 30px;
@@ -103,8 +101,12 @@ body{
 }
 
 .card th{
-    background-color: #0A475B;
+    background-color: #18a5d4;
     border: 0px;
+}
+
+.card tr{
+    background-color:#ccc;
 }
 
 /*ESTILOS DE LA CAJA DEL LOGIN */

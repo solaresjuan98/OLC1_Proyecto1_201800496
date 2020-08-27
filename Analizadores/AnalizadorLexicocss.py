@@ -64,12 +64,6 @@ class AnalizadorLexicocss():
 
     ####################
 
-    def ClasificarToken(self):
-        # Clasificar los tokens de la lista
-        pass
-
-    ####################
-
     def partirLexNumero(self, lexema):
 
         print(lexema)
@@ -153,7 +147,7 @@ class AnalizadorLexicocss():
 
         for letra in range(len(entrada)):
             """
-                Estados de aceptación de tokens:
+                Estados de aceptación de tokens CSS:
                 estado = 3 (comentario)
                 estado = 4 (palabra reservada)
                 estado = 5 (Digito y medida)
@@ -900,8 +894,7 @@ class AnalizadorLexicocss():
 
     def GenerarBitacora(self):
         bitacora = self.salida
-
-        print(bitacora)
+        #print(bitacora)
         return bitacora
         # imprimir lista de errores
 
@@ -955,7 +948,7 @@ class AnalizadorLexicocss():
         
         for error in self.listaErroresLex:
             
-            print(contador)
+            #print(contador)
             contenido2 = "<tr>"\
                         "<td>"\
                         + str(contador) +\
@@ -969,7 +962,6 @@ class AnalizadorLexicocss():
                         "\n"
             contador += 1
             reporte.write(contenido2)
-
                         
         contenido3 = "</table>"\
                      "</div>"\
@@ -978,7 +970,6 @@ class AnalizadorLexicocss():
                      "</html>"\
                      ""\
 
-        
         reporte.write(contenido3)
         reporte.close()
 
