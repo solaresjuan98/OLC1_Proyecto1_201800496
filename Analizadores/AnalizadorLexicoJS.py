@@ -7,6 +7,7 @@ class TokenJavascript(Enum):
 
     COMENTARIO = "Comentario"
     PR_VAR = "Pr_Var"
+    IDENTIFICADOR = "Identificador"
 
     # valores booleanas
     PR_TRUE = "Pr_True"
@@ -39,6 +40,9 @@ class TokenJavascript(Enum):
     S_DIVISION = "Simbolo_division"
     PR_POW = "Pr_pow"
     PR_MATH = "Pr_math"
+
+    # valores numericos
+    NUMERO = "Numero"
 
     # relacionales
     EXPR_IGUAL = "Expresion_igual"
@@ -99,6 +103,9 @@ class AnalizadorLexicoJS():
             """
                 Estados de acepación de tokens JS
                 estado = 2 (comentario de una linea)
+                estado = 5 (comentario multilinea)
+                estado = 6 (Identificador)
+                estado = 7 y 8 (Numeros enteros / con punto decimal)
             """
 
             if estado == 0:
@@ -109,6 +116,70 @@ class AnalizadorLexicoJS():
                 if entrada[letra] == "/":
                     cadena += entrada[letra]
                     estado = 1
+                elif entrada[letra].isalpha():
+                    cadena += entrada[letra]
+                    estado = 6
+                elif entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                    estado = 7
+                elif entrada[letra] == "\n":
+                    cadena = ""
+                elif entrada[letra] == "\t":
+                    cadena = ""
+                elif entrada[letra] == ";":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.PUNTO_Y_COMA)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "(":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.PARENTESIS_IZQ)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == ")":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.PARENTESIS_DER)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "[":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.CORCHETE_IZQ)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "]":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.CORCHETE_DER)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "{":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.LLAVE_IZQ)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "}":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.LLAVE_DER)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == ">":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.S_MAYOR)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "<":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.S_MENOR)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                elif entrada[letra] == "*":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.S_MULT)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
+                
+                # ATRAPAR ERRORES  
+
+
             ##
             elif estado == 1:
 
@@ -165,6 +236,45 @@ class AnalizadorLexicoJS():
                 cadena = ""
                 estado = 0
             ##
+            elif estado == 6:
+                if entrada[letra].isalpha():
+                    cadena += entrada[letra]
+
+                elif entrada[letra].isdigit():
+                    cadena += entrada[letra]
+
+                elif entrada[letra] == "_":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "@":
+                    print("error")
+                    cadena = ""
+                    estado = 0
+                else:
+                    # clasificar y agregar token aceptado a la lista
+                    self.AgregarToken(cadena)
+                    cadena = ""
+                    estado = 0
+            ##
+            elif estado == 7:
+
+                if entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                    estado = 7
+                elif entrada[letra] == ".":
+                    cadena += entrada[letra]
+                    estado = 8
+                else:
+                    estado = 8
+            ##
+            elif estado == 8:
+                if entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                else:
+                    tk_num = TokenJavascript(TokenJavascript.NUMERO)
+                    self.listaTokens.append(
+                        [tk_num.ObtenerTipoTokenJS(), cadena])
+                    range(len(entrada) - 1)
+                    estado = 0
 
     ####################
 
@@ -175,9 +285,77 @@ class AnalizadorLexicoJS():
 
     ####################
 
-    def AgregarToken(self, token):
-        pass
+    def AgregarToken(self, cadena):
 
+        # condicionales
+        if cadena == "if":
+            token_ = TokenJavascript(TokenJavascript.PR_IF)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "else":
+            token_ = TokenJavascript(TokenJavascript.PR_ELSE)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # variables booleanas
+        elif cadena == "true":
+            token_ = TokenJavascript(TokenJavascript.PR_TRUE)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "false":
+            token_ = TokenJavascript(TokenJavascript.PR_FALSE)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # var
+        elif cadena == "var":
+            token_ = TokenJavascript(TokenJavascript.PR_VAR)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # bucles
+        elif cadena == "for":
+            token_ = TokenJavascript(TokenJavascript.PR_FOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "while":
+            token_ = TokenJavascript(TokenJavascript.PR_WHILE)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "do":
+            token_ = TokenJavascript(TokenJavascript.PR_DO)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # sentencias de escape
+        elif cadena == "continue":
+            pass
+            #token_ = TokenJavascript(TokenJavascript.pr_con)
+        elif cadena == "break":
+            token_ = TokenJavascript(TokenJavascript.PR_BREAK)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "return":
+            token_ = TokenJavascript(TokenJavascript.PR_RETURN)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # metodos y funciones
+        elif cadena == "function":
+            token_ = TokenJavascript(TokenJavascript.PR_FUNCTION)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # clases
+        elif cadena == "class":
+            token_ = TokenJavascript(TokenJavascript.PR_CLASS)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "constructor":
+            token_ = TokenJavascript(TokenJavascript.PR_CONSTRUCTOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "this":
+            token_ = TokenJavascript(TokenJavascript.PR_THIS)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+        # potencias
+        elif cadena == "Math":
+            token_ = TokenJavascript(TokenJavascript.PR_MATH)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        elif cadena == "pow":
+            token_ = TokenJavascript(TokenJavascript.PR_POW)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+        else:
+            token_ = TokenJavascript(TokenJavascript.IDENTIFICADOR)
+            self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
     ####################
 
     def GenerarReporte(self, ruta):
