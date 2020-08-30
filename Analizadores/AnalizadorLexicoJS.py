@@ -46,10 +46,11 @@ class TokenJavascript(Enum):
 
     # relacionales
     EXPR_IGUAL = "Expresion_igual"
-    S_MAYOR = "Simbolo_mayor"
-    S_MENOR = "Simbolo_menor"
-    S_MAYOR_IGUAL = "Simbolo_mayor"
-    S_MENOR_IGUAL = "Simbolo_menor"
+    S_MAYOR = "Simbolo mayor que"
+    S_MENOR = "Simbolo menor que"
+    S_MAYOR_IGUAL = "Simbolo mayor o igual que"
+    S_MENOR_IGUAL = "Simbolo menor o igual que"
+    DISTINTO = "Distinto"
 
     # logicos
     CONJUNCION = "Conjuncion"
@@ -70,6 +71,7 @@ class TokenJavascript(Enum):
 
     # punto y coma
     PUNTO_Y_COMA = "Punto_y_coma"
+    COMA = "Coma"
 
     def __init__(self, token):
         super().__init__()
@@ -91,7 +93,7 @@ class AnalizadorLexicoJS():
         self.listaErroresLex = []
         self.salida = ""
         self.estado = 0
-
+        self.fila = 0
     ####################
 
     def Escanear(self, entrada):
@@ -123,14 +125,21 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     estado = 7
                 elif entrada[letra] == "\n":
-                    cadena = ""
+                    self.fila += 1
+                    estado = 0
+                    #cadena = ""
                 elif entrada[letra] == "\t":
+                    estado = 0
+                elif entrada[letra] == ",":
+                    cadena += entrada[letra]
+                    s = TokenJavascript(TokenJavascript.COMA)
+                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == ";":
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PUNTO_Y_COMA)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
-                    cadena = ""
+                    estado = 0
                 elif entrada[letra] == "(":
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PARENTESIS_IZQ)
@@ -161,25 +170,37 @@ class AnalizadorLexicoJS():
                     s = TokenJavascript(TokenJavascript.LLAVE_DER)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
+
+                # OPERADORES ARITMETICOS
                 elif entrada[letra] == ">":
                     cadena += entrada[letra]
-                    s = TokenJavascript(TokenJavascript.S_MAYOR)
-                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
-                    cadena = ""
+                    estado = 9
                 elif entrada[letra] == "<":
                     cadena += entrada[letra]
-                    s = TokenJavascript(TokenJavascript.S_MENOR)
-                    self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
-                    cadena = ""
+                    estado = 9
+                elif entrada[letra] == "!":
+                    cadena += entrada[letra]
+                    estado = 9
                 elif entrada[letra] == "*":
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.S_MULT)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
-                
-                # ATRAPAR ERRORES  
-
-
+                elif entrada[letra] == "+":
+                    cadena += entrada[letra]
+                    estado = 9
+                elif entrada[letra] == "=":
+                    entrada += entrada[letra]
+                    estado = 9
+                elif entrada[letra] == "!":
+                    entrada += entrada[letra]
+                    estado = 9
+                # ATRAPAR ERRORES
+                else:
+                    cadena += entrada[letra]
+                    # self.listaErroresLex.append(cadena)
+                    # self.GuardarError(cadena)
+                    cadena == ""
             ##
             elif estado == 1:
 
@@ -226,6 +247,7 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                 elif entrada[letra] == "\n":
                     cadena += entrada[letra]
+                    self.fila += 1
                 elif entrada[letra] == "*":
                     cadena += entrada[letra]
                     estado = 3
@@ -252,6 +274,7 @@ class AnalizadorLexicoJS():
                 else:
                     # clasificar y agregar token aceptado a la lista
                     self.AgregarToken(cadena)
+                    range(len(entrada) - 1)
                     cadena = ""
                     estado = 0
             ##
@@ -264,7 +287,13 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     estado = 8
                 else:
-                    estado = 8
+                    #estado = 8
+                    tk_num = TokenJavascript(TokenJavascript.NUMERO)
+                    self.listaTokens.append(
+                        [tk_num.ObtenerTipoTokenJS(), cadena])
+                    range(len(entrada) - 1)
+                    #cadena = ""
+                    estado = 0
             ##
             elif estado == 8:
                 if entrada[letra].isdigit():
@@ -274,7 +303,20 @@ class AnalizadorLexicoJS():
                     self.listaTokens.append(
                         [tk_num.ObtenerTipoTokenJS(), cadena])
                     range(len(entrada) - 1)
+                    cadena = ""
                     estado = 0
+            ##
+            elif estado == 9:
+                if entrada[letra] == "=":
+                    cadena += entrada[letra]
+                    estado = 10
+                    range(len(entrada) - 1)
+            ##
+            elif estado == 10:
+                self.ClasificarExpr(cadena)
+                print(cadena)
+                cadena = ""
+                estado = 0
 
     ####################
 
@@ -285,6 +327,22 @@ class AnalizadorLexicoJS():
 
     ####################
 
+    def ClasificarExpr(self, token):
+
+        if token == "!=":
+            t = TokenJavascript(TokenJavascript.DISTINTO)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+        elif token == ">=":
+            t = TokenJavascript(TokenJavascript.S_MAYOR_IGUAL)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+        elif token == "<=":
+            t = TokenJavascript(TokenJavascript.S_MENOR_IGUAL)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+        elif token == "==":
+            t = TokenJavascript(TokenJavascript.EXPR_IGUAL)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+
+    ####################
     def AgregarToken(self, cadena):
 
         # condicionales
@@ -356,6 +414,7 @@ class AnalizadorLexicoJS():
         else:
             token_ = TokenJavascript(TokenJavascript.IDENTIFICADOR)
             self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
     ####################
 
     def GenerarReporte(self, ruta):
@@ -363,3 +422,7 @@ class AnalizadorLexicoJS():
         pass
 
     ####################
+
+    def GuardarError(self, error):
+        print(error)
+        pass

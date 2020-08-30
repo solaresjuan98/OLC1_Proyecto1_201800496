@@ -11,7 +11,6 @@ from Analizadores.AnalizadorLexicoJS import *
 textoArchivo = ""
 bitacora = ""
 
-
 def abrirArchivo():
     # ABRIENDO ARCHIVO
     filename = filedialog.askopenfilename(
@@ -51,6 +50,7 @@ def analizarEntrada():
         analizadorJS = AnalizadorLexicoJS()
         analizadorJS.Escanear(entrada)
         analizadorJS.ImprimirListaTokens()
+        print(analizadorJS.fila)
     elif ext == ".css":
         #print("Es un archivo CSS")
         entrada = textoEntrada.get("1.0", "end-1c")
