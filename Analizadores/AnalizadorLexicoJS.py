@@ -51,6 +51,8 @@ class TokenJavascript(Enum):
     S_MAYOR_IGUAL = "Simbolo mayor o igual que"
     S_MENOR_IGUAL = "Simbolo menor o igual que"
     DISTINTO = "Distinto"
+    INCREMENTO = "Incremento"
+    DECREMENTO = "Decremento"
 
     # logicos
     CONJUNCION = "Conjuncion"
@@ -94,6 +96,8 @@ class AnalizadorLexicoJS():
         self.salida = ""
         self.estado = 0
         self.fila = 0
+        self.archivo_salida = ""
+
     ####################
 
     def Escanear(self, entrada):
@@ -116,7 +120,7 @@ class AnalizadorLexicoJS():
                 range(len(entrada)-1)
 
                 if entrada[letra] == "/":
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     estado = 1
                 elif entrada[letra].isalpha():
                     cadena += entrada[letra]
@@ -186,6 +190,9 @@ class AnalizadorLexicoJS():
                     s = TokenJavascript(TokenJavascript.S_MULT)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
+                elif entrada[letra] == "-":
+                    cadena += entrada[letra]
+                    estado = 9
                 elif entrada[letra] == "+":
                     cadena += entrada[letra]
                     estado = 9
@@ -200,12 +207,13 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     # self.listaErroresLex.append(cadena)
                     # self.GuardarError(cadena)
+                    self.AgregarError(cadena)
                     cadena == ""
             ##
             elif estado == 1:
 
                 if entrada[letra] == "/":
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     estado = 2
                 elif entrada[letra] == "*":
                     cadena += entrada[letra]
@@ -219,10 +227,24 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                elif entrada[letra] == ":":
+                    cadena += entrada[letra]
+                elif entrada[letra] == ".":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "\\":
+                    cadena += entrada[letra]
                 elif entrada[letra] == "\n":
                     token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenJS(), cadena])
+                    ##self.VerificarRuta(cadena, 'PATHW:')
+                    # si el valor da true, ejecutar esto
+                    """if self.VerificarRuta(cadena, 'PATHW:'):
+                        ## reemplazar la cadena
+                        cadena.replace("PATHW:", "")
+                        ##cadena.replace("//", "")
+                        ##cadena.replace("*", "")
+                        #print(cadena)"""
                     cadena = ""
                     estado = 0
             ##
@@ -268,13 +290,27 @@ class AnalizadorLexicoJS():
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
                 elif entrada[letra] == "@":
-                    print("error")
+                    self.AgregarError(entrada[letra])
                     cadena = ""
                     estado = 0
+                elif entrada[letra] == "|":
+                    self.AgregarError(entrada[letra])
+                    cadena = ""
+                    estado = 0
+                elif entrada[letra] == "&":
+                    self.AgregarError(entrada[letra])
+                    cadena = ""
+                    estado = 0
+                elif entrada[letra] == "^":
+                    self.AgregarError(entrada[letra])
+                    cadena = ""
+                    estado = 0
+                
                 else:
                     # clasificar y agregar token aceptado a la lista
                     self.AgregarToken(cadena)
                     range(len(entrada) - 1)
+                    # self.AgregarError(entrada[letra])
                     cadena = ""
                     estado = 0
             ##
@@ -292,6 +328,7 @@ class AnalizadorLexicoJS():
                     self.listaTokens.append(
                         [tk_num.ObtenerTipoTokenJS(), cadena])
                     range(len(entrada) - 1)
+                    self.AgregarError(entrada[letra])
                     #cadena = ""
                     estado = 0
             ##
@@ -311,10 +348,14 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     estado = 10
                     range(len(entrada) - 1)
+                else:
+                    self.AgregarError(entrada[letra])
+                    cadena = ""
+                    estado = 0
             ##
             elif estado == 10:
                 self.ClasificarExpr(cadena)
-                print(cadena)
+                #print(cadena)
                 cadena = ""
                 estado = 0
 
@@ -324,6 +365,27 @@ class AnalizadorLexicoJS():
         lista = self.listaTokens
         for token in lista:
             print(token)
+
+    ####################
+
+    def AgregarError(self, caracter):
+        # validar los caracteres que sean erroes y agregarlos a la lista de errores
+        if caracter == "@":
+            print("Error lexico @")
+        elif caracter == "#":
+            print("Error lexico #")
+        elif caracter == "|":
+            print("Error lexico |")
+        elif caracter == "¿":
+            print("error lexico ¿")
+        elif caracter == "´":
+            print("error lexico ´")
+        elif caracter == "~":
+            print("error lexico ~")
+        elif caracter == "^":
+            print("error lexico ^")
+        elif caracter == "_":
+            print("error lexico _")
 
     ####################
 
@@ -341,8 +403,15 @@ class AnalizadorLexicoJS():
         elif token == "==":
             t = TokenJavascript(TokenJavascript.EXPR_IGUAL)
             self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+        elif token == "+=":
+            t = TokenJavascript(TokenJavascript.INCREMENTO)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
+        elif token == "-=":
+            t = TokenJavascript(TokenJavascript.DECREMENTO)
+            self.listaTokens.append([t.ObtenerTipoTokenJS(), token])
 
     ####################
+
     def AgregarToken(self, cadena):
 
         # condicionales
@@ -416,6 +485,24 @@ class AnalizadorLexicoJS():
             self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
 
     ####################
+
+    def VerificarRuta(self, p1, p2):
+        """aux = p1.replace(p2, "")
+        print("aux: ",aux)
+        ruta = ""
+        ruta = aux.replace(" ", "")
+        print("Ruta: ",ruta)
+        ruta = ruta.replace("\\\\\\", "\\")
+        print(ruta)
+        archivo = open(ruta, "w+")
+        archivo.write("prueba jeje")
+        archivo.close()"""
+        return (' ' + p2 + ' ') in (' ' + p1 + ' ')
+
+    ####################
+
+    def ObtenerRuta(self, cadena):
+        pass
 
     def GenerarReporte(self, ruta):
         # Generar reporte de errores y crea el archivo de acuerdo al directorio dado al inicio del archivo JS

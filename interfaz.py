@@ -3,6 +3,7 @@ from tkinter import messagebox as MessageBox
 from io import open
 from tkinter import filedialog
 import os
+import re
 # Analizadores
 from Analizadores.AnalizadorLexicocss import *
 from Analizadores.AnalizadorLexicoJS import *
@@ -10,6 +11,7 @@ from Analizadores.AnalizadorLexicoJS import *
 
 textoArchivo = ""
 bitacora = ""
+
 
 def abrirArchivo():
     # ABRIENDO ARCHIVO
@@ -50,7 +52,8 @@ def analizarEntrada():
         analizadorJS = AnalizadorLexicoJS()
         analizadorJS.Escanear(entrada)
         analizadorJS.ImprimirListaTokens()
-        print(analizadorJS.fila)
+        print(textoSalida.cget("height"))
+        ## print(analizadorJS.fila)
     elif ext == ".css":
         #print("Es un archivo CSS")
         entrada = textoEntrada.get("1.0", "end-1c")
@@ -138,5 +141,5 @@ botonBorrar.place(x=850, y=10)
 botonBorrar.config(padx=3, pady=3, font=(
     "sans-serif", 10), command=limpiarCajaTexto)
 
-
+## print(textoSalida.index('end'))
 ventana.mainloop()
