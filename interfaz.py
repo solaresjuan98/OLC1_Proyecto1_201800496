@@ -68,7 +68,7 @@ def analizarEntrada():
         bitacora = analizadorCSS.GenerarBitacora()
         textoSalida.insert(INSERT, bitacora)
         # print(bitacora)
-        # print(analizadorCSS.CantidadLineas())
+        print(analizadorCSS.fila)
     elif ext == ".html":
         print("Es un archivo HTML")
     else:

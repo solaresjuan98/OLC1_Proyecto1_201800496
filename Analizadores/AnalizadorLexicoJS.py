@@ -44,6 +44,8 @@ class TokenJavascript(Enum):
     # valores numericos
     NUMERO = "Numero"
 
+    CADENA = "Cadena de texto"
+
     # relacionales
     EXPR_IGUAL = "Expresion_igual"
     S_MAYOR = "Simbolo mayor que"
@@ -116,6 +118,8 @@ class AnalizadorLexicoJS():
                 estado = 5 (comentario multilinea)
                 estado = 6 (Identificador)
                 estado = 7 y 8 (Numeros enteros / con punto decimal)
+                estado = 9 (expresiones relacionaes)
+                estado = 13 
             """
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
@@ -135,6 +139,13 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     self.col += 1
                     estado = 7
+
+                # RECONOCIENDO CADENAS
+                elif entrada[letra] == "\"":
+                    cadena += entrada[letra]
+                    self.col += 1
+                    estado = 11
+
                 elif entrada[letra] == "\n":
                     self.fila += 1
                     self.col = 1
@@ -495,6 +506,52 @@ class AnalizadorLexicoJS():
                 # print(cadena)
                 cadena = ""
                 estado = 0
+            ##
+            elif estado == 11:
+
+                if entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                    estado = 12
+                elif entrada[letra].isalpha():
+                    cadena += entrada[letra]
+                    estado = 12
+                elif entrada[letra] == "/":
+                    cadena += entrada[letra]
+                    estado = 12
+                elif cadena[letra] == "_":
+                    cadena += entrada[letra]
+                    estado = 12
+                elif cadena[letra] == " ":
+                    cadena += entrada[letra]
+                    estado = 12
+                elif cadena[letra] == "-":
+                    cadena += entrada[letra]
+                    estado = 12
+            ##
+            elif estado == 12:
+
+                if entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                elif entrada[letra].isalpha():
+                    cadena += entrada[letra]
+                elif entrada[letra] == "/":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "_":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "-":
+                    cadena += entrada[letra]
+                elif entrada[letra] == " ":
+                    cadena += entrada[letra]
+                elif entrada[letra] == "\"":
+                    cadena += entrada[letra]
+                    estado = 13
+            ##
+            elif estado == 13:
+
+                token_ = TokenJavascript(TokenJavascript.CADENA)
+                self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+                cadena = ""
+                estado = 0
 
     ####################
 
@@ -509,44 +566,38 @@ class AnalizadorLexicoJS():
         # validar los caracteres que sean erroes y agregarlos a la lista de errores
         if caracter == "@":
             print("Error lexico @", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "#":
             print("Error lexico #", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "|":
             print("Error lexico |", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "¿":
             print("error lexico ¿", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "´":
             print("error lexico ´", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "~":
             print("error lexico ~", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "^":
             print("error lexico ^", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "_":
             print("error lexico _", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "?":
             print("error lexico ?", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
         elif caracter == "$":
             print("error lexico $", "fila:", fila, "col: ", col)
-            error = TokenJavascript(TokenJavascript.ERROR)
             self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "%":
+            print("error lexico %", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+
 
     ####################
 
@@ -685,7 +736,7 @@ class AnalizadorLexicoJS():
                     "<header id=\"header\">"\
                     "<div class=\"center\">"\
                     "<div id=\"logo\">"\
-                    "<h2>Reporte de errores</h2>"\
+                    "<h2>PROYECTO COMPILADORES 1</h2>"\
                     "</div>"\
                     "<div class=\"clearfix\"></div>"\
                     "</div>"\
@@ -697,29 +748,29 @@ class AnalizadorLexicoJS():
                     "<table class=\"card\">"\
                     "<tr>"\
                     "<th>No</th>"\
-                    "<th>Linea</th>"\
+                    "<th>Fila</th>"\
                     "<th>Columna</th>"\
                     "<th>Descripcion</th>"\
                     "</tr>"\
-        
+
         reporte.write(contenido)
 
         for error in self.listaErroresLex:
             contenido2 = "<tr>"\
-                        "<td>"\
-                        + str(contador) +\
-                        "</td>"\
-                        "<td>"\
-                        + str(error[0]) +\
-                        "</td>"\
-                        "<td>"\
-                        + str(error[1]) +\
-                        "</td>"\
-                        "<td>"\
-                        + str(error[2]) +\
-                        "</td>"\
-                        "</tr>"\
-                        "\n"
+                "<td>"\
+                + str(contador) +\
+                "</td>"\
+                "<td>"\
+                + str(error[0]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[1]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[2]) +\
+                "</td>"\
+                "</tr>"\
+                "\n"
             contador += 1
             reporte.write(contenido2)
 

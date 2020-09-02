@@ -60,7 +60,7 @@ class AnalizadorLexicocss():
         self.salida = ""
         self.estado = 0
         self.fila = 1
-        self.columna = 0
+        self.columna = 1
 
     ####################
 
@@ -163,32 +163,39 @@ class AnalizadorLexicocss():
                 # LEYENDO COMENTARIOS DE UNA O MAS LINEAS
                 if entrada[letra] == "/":
                     cadena += entrada[letra]
+                    self.columna += 1
                     estado = 1
                 ##
                 elif entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                     estado = 4
                 ##
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                     estado = 5
                 ##
                 elif entrada[letra] == "\"":
                     cadena += entrada[letra]
+                    self.columna += 1
                     print("Lei una comilla doble")
                     estado = 6
                 ##
                 elif entrada[letra] == "'":
                     cadena += entrada[letra]
+                    self.columna += 1
                     print("Lei una comilla simple")
                     estado = 6
                 ##
                 elif entrada[letra] == "." or entrada[letra] == "#":
                     cadena += entrada[letra]
+                    self.columna += 1
                     estado = 8
                 ##
                 elif entrada[letra] == "*":
                     cadena += entrada[letra]
+                    self.columna += 1
                     token_ = Tokencss(Tokencss.SELECTOR_UNIVERSAL)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenCSS(), cadena])
@@ -196,142 +203,48 @@ class AnalizadorLexicocss():
                 ##
                 elif entrada[letra] == ";":
                     cadena += entrada[letra]
+                    self.columna += 1
                     token_ = Tokencss(Tokencss.PUNTO_Y_COMA)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenCSS(), cadena])
                     cadena = ""
                 ##
                 elif entrada[letra] == "(":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == ")":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == "{":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == "}":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == "[":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == "]":
-                    pass
+                    self.columna += 1
                 ##
                 elif entrada[letra] == ",":
-                    pass
-                ##
-                ## ERRORES LÉXICOS
-                elif entrada[letra] == "%":
-                    print("Error")
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "$":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "@":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "|":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "?":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "¿":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "!":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "¡":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "¬":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "~":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "+":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "´":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "^":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == ">":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "<":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "_":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
-                ##
-                elif entrada[letra] == "=":
-                    cadena += entrada[letra]
-                    self.listaErroresLex.append(cadena)
-                    cadena = ""
-                    estado = 0
+                    self.columna += 1
                 ##
                 elif entrada[letra] == "\n":
                     self.fila += 1
+                    self.columna = 1
                     print("Salto de linea")
                 ##
                 elif entrada[letra] == "\t":
+                    self.fila += 4
                     print("Tabulación")
+                
+                ## ATRAPAR ERRORES
+                else:
+                    cadena += entrada[letra]
+                    self.AgregarError(cadena, self.fila, self.columna)
+                    self.columna += 1
+                    cadena == ""       
             ##
             elif estado == 1:
                 self.salida += "Analizador en estado 1\n"
@@ -356,6 +269,7 @@ class AnalizadorLexicocss():
                     #print("Lei un salto de linea")
                     cadena += entrada[letra]
                     self.fila += 1
+                    self.columna = 1
                     estado = 2
                 ##
                 elif entrada[letra] == "/":
@@ -370,148 +284,182 @@ class AnalizadorLexicocss():
                 # LETRAS Y NUMEROS
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei una letra")
                 ##
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un numero")
                 ##
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un espacio")
 
                 # SIGNOS DE PUNTUACION
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un punto")
                 ##
                 elif entrada[letra] == ",":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei una coma")
                 ##
                 elif entrada[letra] == ":":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei dos puntos")
                 ##
                 elif entrada[letra] == ";":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei punto y coma")
 
                 # SIMBOLOS DE AGRUPACION
                 elif entrada[letra] == "(":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei parentesis izq")
                 ##
                 elif entrada[letra] == ")":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei parentesis der")
                 ##
                 elif entrada[letra] == "<":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei bracket izq")
                 ##
                 elif entrada[letra] == ">":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei bracket der")
                 ##
                 elif entrada[letra] == "{":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei parentesis izq")
                 ##
                 elif entrada[letra] == "}":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei parentesis der")
                 ##
                 elif entrada[letra] == "[":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei corchete izq")
                 ##
                 elif entrada[letra] == "]":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei corchete der")
 
                 # GUIONES
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un guión")
                 ##
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un guion bajo")
                 ##
 
                 # OPERADORES
                 elif entrada[letra] == "+":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo más")
                 ##
                 elif entrada[letra] == "=":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo igual")
                 ##
 
                 # SIGNOS DE INTERROGACION/EXCLAMACIÓN
                 elif entrada[letra] == "!":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo exlamación")
                 ##
                 elif entrada[letra] == "¡":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo exclamación")
                 ##
                 elif entrada[letra] == "¿":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo interrogación")
                 ##
                 elif entrada[letra] == "?":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo interrogación")
                 ##
 
                 # SIMBOLOS
                 elif entrada[letra] == "@":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un arroba")
                 ##
                 elif entrada[letra] == "$":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo de dolar")
                 ##
                 elif entrada[letra] == "^":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo de potencia")
                 ##
                 elif entrada[letra] == "%":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo de porcentaje")
                 ##
                 elif entrada[letra] == "&":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un signo aspersand")
                 ##
                 elif entrada[letra] == "\n":
                     cadena += entrada[letra]
                     self.fila += 1
+                    self.columna = 1
                     #print("Lei un salto de linea")
                 ##
                 elif entrada[letra] == "\t":
                     cadena += entrada[letra]
+                    self.fila += 4
                     #print("Lei una tabulación")
                 ##
                 elif entrada[letra] == "|":
                     cadena += entrada[letra]
+                    self.fila += 1
                     #print("Lei un pipe")
                 ##
                 elif entrada[letra] == "°":
                     cadena += entrada[letra]
+                    self.fila += 1
                     #print("Lei una orden")
                 ##
                 elif entrada[letra] == "¬":
                     cadena += entrada[letra]
+                    self.fila += 1
                     #print("Lei un simbolo raro")
                 ##
                 elif entrada[letra] == "'":
                     cadena += entrada[letra]
+                    self.fila += 1
                     #print("Lei una comilla simple")
                 ##
                 elif entrada[letra] == "*":
@@ -533,15 +481,19 @@ class AnalizadorLexicocss():
                 # ESTADO DE ACEPTACIÓN
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei una letra")
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un numero")
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un guion")
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
+                    self.columna += 1
                     #print("Lei un guion bajo")
                 else:  # aceptar el ID o detectar el error lexico
                     # print(cadena)
@@ -555,12 +507,16 @@ class AnalizadorLexicocss():
                 self.salida += "Analizador en estado 5\n"
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "%":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                 else:
                     self.partirLexNumero(cadena)
                     range(len(entrada) - 1)
@@ -570,18 +526,25 @@ class AnalizadorLexicocss():
                 self.salida += "Analizador en estado 6\n"
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "/":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "\\":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "\"" or entrada[letra] == "'":
                     cadena += entrada[letra]
+                    self.columna += 1
                     estado = 7
             ##
             elif estado == 7:
@@ -596,12 +559,16 @@ class AnalizadorLexicocss():
                 self.salida += "Analizador en estado 8\n"
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
+                    self.columna += 1
                 elif entrada[letra] == " ":
                     token_ = Tokencss(Tokencss.SELECTOR)
                     self.listaTokens.append(
@@ -842,7 +809,6 @@ class AnalizadorLexicocss():
             token_ = Tokencss(Tokencss.COLOR)
             self.listaTokens.append([token_.ObtenerTipoTokenCSS(), token])
 
-
         ######## VALORES ########
         # Unidades de medida
         elif token == "px":
@@ -878,6 +844,44 @@ class AnalizadorLexicocss():
 
     ####################
 
+    def AgregarError(self, caracter, fila, col):
+         # validar los caracteres que sean erroes y agregarlos a la lista de errores
+        if caracter == "@":
+            print("Error lexico @", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "#":
+            print("Error lexico #", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "|":
+            print("Error lexico |", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "¿":
+            print("error lexico ¿", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "´":
+            print("error lexico ´", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "~":
+            print("error lexico ~", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "^":
+            print("error lexico ^", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "_":
+            print("error lexico _", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "?":
+            print("error lexico ?", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "$":
+            print("error lexico $", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "%":
+            print("error lexico %", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+
+    ####################
+
     def ImprimirListaTokens(self):
         lista = self.listaTokens
         for token in lista:
@@ -894,7 +898,7 @@ class AnalizadorLexicocss():
 
     def GenerarBitacora(self):
         bitacora = self.salida
-        #print(bitacora)
+        # print(bitacora)
         return bitacora
         # imprimir lista de errores
 
@@ -906,7 +910,7 @@ class AnalizadorLexicocss():
     ####################
 
     def GenerarReporte(self):
-        contador = 1 ## contador del numero de errores
+        contador = 1  # contador del numero de errores
         reporte = open("Reportes/ErroresCSS.html", "w")
 
         contenido = "<!DOCTYPE html>"\
@@ -940,29 +944,33 @@ class AnalizadorLexicocss():
                     "<th>Columna</th>"\
                     "<th>Descripcion</th>"\
                     "</tr>"\
-        
+
         reporte.write(contenido)
 
         print()
         contenido2 = ""\
-        
+
         for error in self.listaErroresLex:
-            
-            #print(contador)
+
+            # print(contador)
             contenido2 = "<tr>"\
-                        "<td>"\
-                        + str(contador) +\
-                        "</td>"\
-                        "<td>---</td>"\
-                        "<td>---</td>"\
-                        "<td>"\
-                        + error +\
-                        "</td>"\
-                        "</tr>"\
-                        "\n"
+                "<td>"\
+                + str(contador) +\
+                "</td>"\
+                "<td>"\
+                + str(error[0]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[1]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[2]) +\
+                "</td>"\
+                "</tr>"\
+                "\n"
             contador += 1
             reporte.write(contenido2)
-                        
+
         contenido3 = "</table>"\
                      "</div>"\
                      "</section>"\
@@ -972,7 +980,3 @@ class AnalizadorLexicocss():
 
         reporte.write(contenido3)
         reporte.close()
-
-
-
-
