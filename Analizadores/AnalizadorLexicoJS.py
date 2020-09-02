@@ -95,7 +95,8 @@ class AnalizadorLexicoJS():
         self.listaErroresLex = []
         self.salida = ""
         self.estado = 0
-        self.fila = 0
+        self.fila = 1
+        self.col = 1
         self.archivo_salida = ""
 
     ####################
@@ -113,7 +114,7 @@ class AnalizadorLexicoJS():
                 estado = 6 (Identificador)
                 estado = 7 y 8 (Numeros enteros / con punto decimal)
             """
-
+            ## ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
                 cadena = ""
 
@@ -121,55 +122,68 @@ class AnalizadorLexicoJS():
 
                 if entrada[letra] == "/":
                     #cadena += entrada[letra]
+                    self.col += 1 
                     estado = 1
                 elif entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 6
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 7
                 elif entrada[letra] == "\n":
                     self.fila += 1
+                    self.col = 1 
                     estado = 0
                     #cadena = ""
                 elif entrada[letra] == "\t":
                     estado = 0
+                    self.col += 4 
                 elif entrada[letra] == ",":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.COMA)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == ";":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PUNTO_Y_COMA)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     estado = 0
                 elif entrada[letra] == "(":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PARENTESIS_IZQ)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == ")":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PARENTESIS_DER)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == "[":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.CORCHETE_IZQ)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == "]":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.CORCHETE_DER)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == "{":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.LLAVE_IZQ)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == "}":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.LLAVE_DER)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
@@ -177,63 +191,84 @@ class AnalizadorLexicoJS():
 
                 # OPERADORES ARITMETICOS
                 elif entrada[letra] == ">":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "<":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "!":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "*":
+                    self.col += 1 
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.S_MULT)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
                     cadena = ""
                 elif entrada[letra] == "-":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "+":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "=":
+                    self.col += 1 
                     entrada += entrada[letra]
                     estado = 9
                 elif entrada[letra] == "!":
+                    self.col += 1 
                     entrada += entrada[letra]
                     estado = 9
                 # ATRAPAR ERRORES
                 else:
                     cadena += entrada[letra]
-                    # self.listaErroresLex.append(cadena)
-                    # self.GuardarError(cadena)
-                    self.AgregarError(cadena)
+                    self.AgregarError(cadena, self.fila, self.col)
+                    self.col += 1
                     cadena == ""
+                    
             ##
             elif estado == 1:
 
                 if entrada[letra] == "/":
                     #cadena += entrada[letra]
+                    self.col += 1 
                     estado = 2
                 elif entrada[letra] == "*":
+                    self.col += 1 
                     cadena += entrada[letra]
                     estado = 3
+                elif entrada[letra] == "\n":
+                    self.col += 1 
+                    self.fila += 1     
             ##
             elif estado == 2:
 
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == ":":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == "\\":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == "\n":
+                    self.fila += 1
+                    self.col = 1 
                     token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenJS(), cadena])
@@ -252,57 +287,76 @@ class AnalizadorLexicoJS():
 
                 if entrada[letra] == "*":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra].isdigit() or entrada[letra].isalpha():
                     cadena += entrada[letra]
                     estado = 4
+                    self.col += 1 
+                elif entrada[letra] == "\n":
+                    self.fila += 1
+                    self.col = 1 
                 elif entrada[letra] == "/":
                     cadena += entrada[letra]
                     estado = 5
+                    self.col += 1 
             ##
             elif estado == 4:
 
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.col += 1 
                 elif entrada[letra] == "\n":
                     cadena += entrada[letra]
+                    self.col = 1 
                     self.fila += 1
                 elif entrada[letra] == "*":
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 3
             ##
             elif estado == 5:
+                self.fila += 1
                 token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                 self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
                 cadena = ""
-                estado = 0
+                estado = 0   
             ##
             elif estado == 6:
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
-
+                    self.col += 1 
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
-
+                    self.col += 1 
                 elif entrada[letra] == "_":
                     cadena += entrada[letra]
+                    self.col += 1 
+
+                ## ERRORES LEXICOS
                 elif entrada[letra] == "@":
                     self.AgregarError(entrada[letra])
+                    self.col += 1 
                     cadena = ""
                     estado = 0
                 elif entrada[letra] == "|":
                     self.AgregarError(entrada[letra])
+                    self.col += 1 
                     cadena = ""
                     estado = 0
                 elif entrada[letra] == "&":
                     self.AgregarError(entrada[letra])
+                    self.col += 1 
                     cadena = ""
                     estado = 0
                 elif entrada[letra] == "^":
                     self.AgregarError(entrada[letra])
+                    self.col += 1 
                     cadena = ""
                     estado = 0
                 
@@ -318,9 +372,11 @@ class AnalizadorLexicoJS():
 
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 7
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 8
                 else:
                     #estado = 8
@@ -328,13 +384,14 @@ class AnalizadorLexicoJS():
                     self.listaTokens.append(
                         [tk_num.ObtenerTipoTokenJS(), cadena])
                     range(len(entrada) - 1)
-                    self.AgregarError(entrada[letra])
+                    self.AgregarError(entrada[letra], self.fila, self.col)
                     #cadena = ""
                     estado = 0
             ##
             elif estado == 8:
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.col += 1 
                 else:
                     tk_num = TokenJavascript(TokenJavascript.NUMERO)
                     self.listaTokens.append(
@@ -346,10 +403,11 @@ class AnalizadorLexicoJS():
             elif estado == 9:
                 if entrada[letra] == "=":
                     cadena += entrada[letra]
+                    self.col += 1 
                     estado = 10
                     range(len(entrada) - 1)
                 else:
-                    self.AgregarError(entrada[letra])
+                    self.AgregarError(entrada[letra], self.fila, self.col)
                     cadena = ""
                     estado = 0
             ##
@@ -368,24 +426,24 @@ class AnalizadorLexicoJS():
 
     ####################
 
-    def AgregarError(self, caracter):
+    def AgregarError(self, caracter, fila, col):
         # validar los caracteres que sean erroes y agregarlos a la lista de errores
         if caracter == "@":
-            print("Error lexico @")
+            print("Error lexico @", "fila:", fila, "col: ", col)
         elif caracter == "#":
-            print("Error lexico #")
+            print("Error lexico #", "fila:", fila, "col: ", col)
         elif caracter == "|":
-            print("Error lexico |")
+            print("Error lexico |", "fila:", fila, "col: ", col)
         elif caracter == "¿":
-            print("error lexico ¿")
+            print("error lexico ¿", "fila:", fila, "col: ", col)
         elif caracter == "´":
-            print("error lexico ´")
+            print("error lexico ´", "fila:", fila, "col: ", col)
         elif caracter == "~":
-            print("error lexico ~")
+            print("error lexico ~", "fila:", fila, "col: ", col)
         elif caracter == "^":
-            print("error lexico ^")
+            print("error lexico ^", "fila:", fila, "col: ", col)
         elif caracter == "_":
-            print("error lexico _")
+            print("error lexico _", "fila:", fila, "col: ", col)
 
     ####################
 

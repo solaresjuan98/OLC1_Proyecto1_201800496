@@ -51,9 +51,10 @@ def analizarEntrada():
             "Aviso", "Analisis del archivo JavaScript iniciado")
         analizadorJS = AnalizadorLexicoJS()
         analizadorJS.Escanear(entrada)
+        print("\n\n")
         analizadorJS.ImprimirListaTokens()
-        print(textoSalida.cget("height"))
-        ## print(analizadorJS.fila)
+        #print(textoSalida.cget("height"))
+        print(analizadorJS.fila)
     elif ext == ".css":
         #print("Es un archivo CSS")
         entrada = textoEntrada.get("1.0", "end-1c")
