@@ -53,6 +53,7 @@ def analizarEntrada():
         analizadorJS.Escanear(entrada)
         print("\n\n")
         analizadorJS.ImprimirListaTokens()
+        analizadorJS.GenerarReporte()
         #print(textoSalida.cget("height"))
         print(analizadorJS.fila)
     elif ext == ".css":
