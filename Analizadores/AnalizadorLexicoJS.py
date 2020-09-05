@@ -1,7 +1,7 @@
 
 from enum import Enum
 from io import open
-
+import os
 
 class TokenJavascript(Enum):
 
@@ -119,7 +119,7 @@ class AnalizadorLexicoJS():
                 estado = 6 (Identificador)
                 estado = 7 y 8 (Numeros enteros / con punto decimal)
                 estado = 9 (expresiones relacionaes)
-                estado = 13 
+                estado = 13 (cadenas de texto)
             """
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
@@ -140,11 +140,11 @@ class AnalizadorLexicoJS():
                     self.col += 1
                     estado = 7
 
-                # RECONOCIENDO CADENAS
-                elif entrada[letra] == "\"":
+                # RECONOCIENDO CADENAS (Causa problema)
+                elif entrada[letra] == "\"" or entrada[letra] == "'":
                     cadena += entrada[letra]
                     self.col += 1
-                    estado = 11
+                    ##estado = 11
 
                 elif entrada[letra] == "\n":
                     self.fila += 1
@@ -167,6 +167,7 @@ class AnalizadorLexicoJS():
                     cadena += entrada[letra]
                     s = TokenJavascript(TokenJavascript.PUNTO_Y_COMA)
                     self.listaTokens.append([s.ObtenerTipoTokenJS(), cadena])
+                    cadena = ""
                     estado = 0
                 elif entrada[letra] == "(":
                     self.col += 1
@@ -257,9 +258,17 @@ class AnalizadorLexicoJS():
                     self.col += 1
                     cadena += entrada[letra]
                     estado = 3
-                elif entrada[letra] == "\n":
+                else:
+                    self.AgregarError(cadena, self.fila, self.col)
                     self.col += 1
-                    self.fila += 1
+                    estado = 0
+                    cadena = ""
+
+                """elif entrada[letra] == "\n":
+                    ##cadena += entrada[letra]
+                    self.col += 1
+                    self.fila += 1"""
+                
             ##
             elif estado == 2:
 
@@ -308,6 +317,7 @@ class AnalizadorLexicoJS():
                     estado = 4
                     self.col += 1
                 elif entrada[letra] == "\n":
+                    cadena += entrada[letra]
                     self.fila += 1
                     self.col = 1
                 elif entrada[letra] == "/":
@@ -518,13 +528,13 @@ class AnalizadorLexicoJS():
                 elif entrada[letra] == "/":
                     cadena += entrada[letra]
                     estado = 12
-                elif cadena[letra] == "_":
+                elif entrada[letra] == "_":
                     cadena += entrada[letra]
                     estado = 12
-                elif cadena[letra] == " ":
+                elif entrada[letra] == " ":
                     cadena += entrada[letra]
                     estado = 12
-                elif cadena[letra] == "-":
+                elif entrada[letra] == "-":
                     cadena += entrada[letra]
                     estado = 12
             ##
@@ -783,6 +793,7 @@ class AnalizadorLexicoJS():
 
         reporte.write(contenido3)
         reporte.close()
+        os.startfile("C:\\Users\\jsola\\Desktop\\Proyecto1_Compiladores\\Reportes\\Erroresjs.html")
 
         pass
 
