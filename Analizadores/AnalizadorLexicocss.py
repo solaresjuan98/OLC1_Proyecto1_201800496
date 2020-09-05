@@ -163,7 +163,7 @@ class AnalizadorLexicocss():
 
                 # LEYENDO COMENTARIOS DE UNA O MAS LINEAS
                 if entrada[letra] == "/":
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     self.columna += 1
                     estado = 1
                 ##
@@ -259,7 +259,7 @@ class AnalizadorLexicocss():
                 #print("Estoy en estado 1")
                 if entrada[letra] == "*":
                     #print("lei un asterisco")
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     estado = 2
                 ##
                 elif entrada[letra] == " ":
@@ -283,7 +283,7 @@ class AnalizadorLexicocss():
                 ##
                 elif entrada[letra] == "/":
                     #print("Lei una diagonal")
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     estado = 3
             ##
             elif estado == 2:
@@ -318,6 +318,11 @@ class AnalizadorLexicocss():
                     #print("Lei una coma")
                 ##
                 elif entrada[letra] == ":":
+                    cadena += entrada[letra]
+                    self.columna += 1
+                    #print("Lei dos puntos")
+                ##
+                elif entrada[letra] == "\\":
                     cadena += entrada[letra]
                     self.columna += 1
                     #print("Lei dos puntos")
@@ -472,7 +477,7 @@ class AnalizadorLexicocss():
                     #print("Lei una comilla simple")
                 ##
                 elif entrada[letra] == "*":
-                    cadena += entrada[letra]
+                    #cadena += entrada[letra]
                     self.columna += 1
                     #print("Lei un asterisco")
                     estado = 1
@@ -483,6 +488,12 @@ class AnalizadorLexicocss():
                 token_ = Tokencss(Tokencss.COMENTARIO)
                 self.listaTokens.append([token_.ObtenerTipoTokenCSS(), cadena])
                 self.salida += "   Token de tipo comentario aceptado\n"
+
+                if self.VerificarRuta(cadena, 'PATHW:'):
+                    # reemplazar la cadena
+                    cadena.replace("PATHW:", "")
+                #########
+
                 cadena = ""
                 estado = 0
             ##
@@ -930,6 +941,21 @@ class AnalizadorLexicocss():
 
     ####################
 
+    def VerificarRuta(self, p1, p2):
+        aux = p1.replace(p2, "")
+        print("aux: ", aux)
+        ruta = ""
+        ruta = aux.replace(" ", "")
+        print("Ruta: ",ruta)
+        ruta = ruta.replace("\\\\\\", "\\")
+        print(ruta)
+        if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
+            archivo = open(ruta, "w+")
+            archivo.write("prueba jeje")
+            archivo.close()
+        return (' ' + p2 + ' ') in (' ' + p1 + ' ')
+
+    ####################
     def AgregarError(self, caracter, fila, col):
          # validar los caracteres que sean erroes y agregarlos a la lista de errores
         if caracter == "@":

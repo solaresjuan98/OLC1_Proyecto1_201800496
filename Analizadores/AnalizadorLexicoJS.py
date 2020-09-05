@@ -267,8 +267,7 @@ class AnalizadorLexicoJS():
                 """elif entrada[letra] == "\n":
                     ##cadena += entrada[letra]
                     self.col += 1
-                    self.fila += 1"""
-                
+                    self.fila += 1"""            
             ##
             elif estado == 2:
 
@@ -296,14 +295,11 @@ class AnalizadorLexicoJS():
                     token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenJS(), cadena])
-                    # self.VerificarRuta(cadena, 'PATHW:')
-                    # si el valor da true, ejecutar esto
-                    """if self.VerificarRuta(cadena, 'PATHW:'):
+
+                    if self.VerificarRuta(cadena, 'PATHW:'):
                         # reemplazar la cadena
                         cadena.replace("PATHW:", "")
-                        # cadena.replace("//", "")
-                        # cadena.replace("*", "")
-                        # print(cadena)"""
+                    #########
                     cadena = ""
                     estado = 0
             ##
@@ -608,7 +604,6 @@ class AnalizadorLexicoJS():
             print("error lexico %", "fila:", fila, "col: ", col)
             self.listaErroresLex.append([fila, col, caracter])
 
-
     ####################
 
     def ClasificarExpr(self, token):
@@ -709,16 +704,17 @@ class AnalizadorLexicoJS():
     ####################
 
     def VerificarRuta(self, p1, p2):
-        """aux = p1.replace(p2, "")
-        print("aux: ",aux)
+        aux = p1.replace(p2, "")
+        print("aux: ", aux)
         ruta = ""
         ruta = aux.replace(" ", "")
         print("Ruta: ",ruta)
         ruta = ruta.replace("\\\\\\", "\\")
         print(ruta)
-        archivo = open(ruta, "w+")
-        archivo.write("prueba jeje")
-        archivo.close()"""
+        if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
+            archivo = open(ruta, "w+")
+            archivo.write("prueba jeje")
+            archivo.close()
         return (' ' + p2 + ' ') in (' ' + p1 + ' ')
 
     ####################

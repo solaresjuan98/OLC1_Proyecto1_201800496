@@ -34,11 +34,13 @@ def abrirArchivo():
     except:
         print("El archivo no existe.")
 
+#######################
 
 def limpiarCajaTexto():
     textoEntrada.delete('1.0', END)
     textoSalida.delete('1.0', END)
 
+#######################
 
 def analizarEntrada():
     # atrapa la extensión del archivo
@@ -74,6 +76,12 @@ def analizarEntrada():
     else:
         print("Formato no permitido / archivo no cargado")
 
+#######################
+
+def colorearJS():
+    pass
+
+#######################
 
 ventana = Tk()
 ventana.title("OLC PROYECTO 1 - 201800496")
