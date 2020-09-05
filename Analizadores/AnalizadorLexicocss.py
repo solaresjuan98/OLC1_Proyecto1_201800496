@@ -5,7 +5,6 @@ from enum import Enum
 from io import open
 import os
 
-
 class Tokencss(Enum):
     # selectores
     """ palabras reservadas de html como p, h1, *(universal), ID, clases, pseudoclases div etc...
@@ -48,7 +47,6 @@ class Tokencss(Enum):
         return self.Token
 
 #####
-
 
 class AnalizadorLexicocss():
 
@@ -216,6 +214,10 @@ class AnalizadorLexicocss():
                 ##
                 elif entrada[letra] == "(":
                     self.columna += 1
+                ##
+                elif entrada[letra] == "-":
+                    self.columna += 1
+                    estado = 5
                 ##
                 elif entrada[letra] == ")":
                     self.columna += 1
@@ -513,6 +515,9 @@ class AnalizadorLexicocss():
                     self.columna += 1
                     #print("Lei un guion")
                 elif entrada[letra] == "_":
+                    cadena += entrada[letra]
+                    self.columna += 1
+                elif entrada[letra] == "#":
                     cadena += entrada[letra]
                     self.columna += 1
                     #print("Lei un guion bajo")
