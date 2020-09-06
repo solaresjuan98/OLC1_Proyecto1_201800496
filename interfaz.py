@@ -4,6 +4,7 @@ from io import open
 from tkinter import filedialog
 import os
 import re
+
 # Analizadores
 from Analizadores.AnalizadorLexicocss import *
 from Analizadores.AnalizadorLexicoJS import *
@@ -36,11 +37,13 @@ def abrirArchivo():
 
 #######################
 
+
 def limpiarCajaTexto():
     textoEntrada.delete('1.0', END)
     textoSalida.delete('1.0', END)
 
 #######################
+
 
 def analizarEntrada():
     # atrapa la extensión del archivo
@@ -57,7 +60,7 @@ def analizarEntrada():
         analizadorJS.ImprimirListaTokens()
         analizadorJS.GenerarReporte()
         analizadorJS.GenerarSalida()
-        #print(textoSalida.cget("height"))
+
         print(analizadorJS.fila)
     elif ext == ".css":
         #print("Es un archivo CSS")
@@ -79,10 +82,12 @@ def analizarEntrada():
 
 #######################
 
+
 def colorearJS():
     pass
 
 #######################
+
 
 ventana = Tk()
 ventana.title("OLC PROYECTO 1 - 201800496")
@@ -152,5 +157,5 @@ botonBorrar.place(x=850, y=10)
 botonBorrar.config(padx=3, pady=3, font=(
     "sans-serif", 10), command=limpiarCajaTexto)
 
-## print(textoSalida.index('end'))
+
 ventana.mainloop()

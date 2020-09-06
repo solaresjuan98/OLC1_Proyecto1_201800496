@@ -37,6 +37,10 @@ class Tokencss(Enum):
     NUMERO = "Numero"
     URL_ = "Url"
     PUNTO_Y_COMA = "Punto y coma"
+    PAR_IZQ = "Parentesis izq"
+    PAR_DER = "Parentesis der"
+    LLAVE_IZQ = "Llave izq"
+    LLAVE_DER = "Llave der"
 
     def __init__(self, token):
         super().__init__()
@@ -60,6 +64,7 @@ class AnalizadorLexicocss():
         self.estado = 0
         self.fila = 1
         self.columna = 1
+        
 
     ####################
 
