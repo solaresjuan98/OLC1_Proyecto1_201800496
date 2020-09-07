@@ -50,7 +50,7 @@ def analizarEntrada():
     ext = labelFormato['text']
 
     if ext == ".js":
-        #print("Es un archivo javascript")
+  
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo(
             "Aviso", "Analisis del archivo JavaScript iniciado")
@@ -64,8 +64,9 @@ def analizarEntrada():
         textoSalida.insert(INSERT, "\t :: LISTADO DE TOKENS :: \n")
         textoSalida.insert(INSERT, tokens)
         print(analizadorJS.fila)
+    
     elif ext == ".css":
-        #print("Es un archivo CSS")
+
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo("Aviso", "Analisis del archivo CSS iniciado.")
         analizadorCSS = AnalizadorLexicocss()
@@ -77,10 +78,20 @@ def analizarEntrada():
         textoSalida.insert(INSERT, bitacora)
         # print(bitacora)
         print(analizadorCSS.fila)
+    
     elif ext == ".html":
-        print("Es un archivo HTML")
+
         entrada = textoEntrada.get("1.0", "end-1c")
+        #print(entrada)
         MessageBox.showinfo("Aviso", "Analisis del archivo HTML iniciado")
+        analizadorHTML = AnalizadorLexicohtml()
+        analizadorHTML.Escanear(entrada)
+        tokensHTML = analizadorHTML.imprimirListaTokens()
+        textoSalida.insert(INSERT, "\t :: LISTADO DE TOKENS :: \n")
+        textoSalida.insert(INSERT, tokensHTML)
+        print(analizadorHTML.fila)
+        
+
     elif ext == ".rmt":
         print("Es un archivo rmt")
         entrada = textoEntrada.get("1.0", "end-1c")
