@@ -115,6 +115,11 @@ class AnalizadorLexicoJS():
         estado = self.estado
         #self.salida = entrada
         cadena = ""
+        # bandera que indica si el grafo de automata fue generado
+        banderaID = False
+        banderaNum = False
+        banderaComentario = False
+        banderaCadena = False
 
         for letra in range(len(entrada)):
             """
@@ -129,7 +134,7 @@ class AnalizadorLexicoJS():
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
                 #cadena = ""
-                print("Estoy en estado 0 ", entrada[letra])
+                #print("Estoy en estado 0 ", entrada[letra])
                 range(len(entrada)-1)
                 cadena = ""
                 if entrada[letra] == "/":
@@ -296,7 +301,7 @@ class AnalizadorLexicoJS():
                     cadena == ""
             ##
             elif estado == 1:
-                print("Estoy en estado 1 ", cadena)
+                #print("Estoy en estado 1 ", cadena)
                 if entrada[letra] == "/":
                     # cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -319,7 +324,7 @@ class AnalizadorLexicoJS():
                     self.fila += 1"""
             ##
             elif estado == 2:
-                print("Estoy en estado 2 ", cadena)
+                #print("Estoy en estado 2 ", cadena)
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -360,7 +365,7 @@ class AnalizadorLexicoJS():
                     estado = 0
             ##
             elif estado == 3:
-                print("Estoy en estado 3 ", cadena)
+                #print("Estoy en estado 3 ", cadena)
                 if entrada[letra] == "*":
                     self.salida += entrada[letra]
                     cadena += entrada[letra]
@@ -382,7 +387,7 @@ class AnalizadorLexicoJS():
                     self.col += 1
             ##
             elif estado == 4:
-                print("Estoy en estado 4 ", cadena)
+                #print("Estoy en estado 4 ", cadena)
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -486,7 +491,7 @@ class AnalizadorLexicoJS():
                     estado = 3
             ##
             elif estado == 5:
-                print("Estoy en estado 5 ", cadena)
+                #print("Estoy en estado 5 ", cadena)
                 self.fila += 1
                 token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                 self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
@@ -494,7 +499,7 @@ class AnalizadorLexicoJS():
                 estado = 0
             ##
             elif estado == 6:
-                print("Estoy en estado 6 ", cadena)
+                #print("Estoy en estado 6 ", cadena)
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -577,8 +582,9 @@ class AnalizadorLexicoJS():
                 else:
                     # clasificar y agregar token aceptado a la lista
                     self.AgregarToken(cadena)
-                    ##range(len(entrada) - 1)
-                    ##cadena = ""
+                    if banderaID == False:
+                        self.GenerarGrafoID(cadena)
+                        banderaID = True
                     estado = 0
                 # PARENTESIS, etc (causa que se estanquee)
                 """elif entrada[letra] == "(" or entrada[letra] == ":":
@@ -587,7 +593,7 @@ class AnalizadorLexicoJS():
                     estado = 14"""
             ##
             elif estado == 7:
-                print("Estoy en estado 7 ", cadena)
+                #print("Estoy en estado 7 ", cadena)
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -605,11 +611,17 @@ class AnalizadorLexicoJS():
                         [tk_num.ObtenerTipoTokenJS(), cadena])
                     # range(len(entrada) - 1)
                     self.AgregarError(entrada[letra], self.fila, self.col)
+
+                    # generando grafo
+                    if banderaNum == False:
+                        self.GenerarGrafoNum(cadena)
+                        banderaNum = True
+
                     cadena = ""
                     estado = 0
             ##
             elif estado == 8:
-                print("Estoy en estado 8 ", cadena)
+                #print("Estoy en estado 8 ", cadena)
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -619,11 +631,15 @@ class AnalizadorLexicoJS():
                     self.listaTokens.append(
                         [tk_num.ObtenerTipoTokenJS(), cadena])
                     # range(len(entrada) - 1)
+                    if banderaNum == False:
+                        self.GenerarGrafoNum(cadena)
+                        banderaNum = True
+
                     cadena = ""
                     estado = 0
             ##
             elif estado == 9:
-                print("Estoy en estado 9 ", cadena)
+                #print("Estoy en estado 9 ", cadena)
                 if entrada[letra] == "=":
                     self.salida += entrada[letra]
                     cadena += entrada[letra]
@@ -642,7 +658,7 @@ class AnalizadorLexicoJS():
                 estado = 0
             ##
             elif estado == 11:
-                print("Estoy en estado 11 ", cadena)
+                #print("Estoy en estado 11 ", cadena)
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
                     self.col += 1
@@ -710,6 +726,11 @@ class AnalizadorLexicoJS():
 
                 token_ = TokenJavascript(TokenJavascript.CADENA)
                 self.listaTokens.append([token_.ObtenerTipoTokenJS(), cadena])
+
+                if banderaCadena == False:
+                    self.GenerarGrafoCadenaTexto(cadena)
+                    banderaComentario = True
+
                 cadena = ""
                 estado = 0
             ##
@@ -733,10 +754,16 @@ class AnalizadorLexicoJS():
     ####################
 
     def ImprimirListaTokens(self):
+        contenido = ""
         lista = self.listaTokens
         for token in lista:
-            print(token)
+            contenido += "Tipo: "\
+                        + str(token[0]) +\
+                        " VALOR: "\
+                        + str(token[1]) +\
+                        "\n"\
 
+        return contenido
     ####################
 
     def AgregarError(self, caracter, fila, col):
@@ -916,6 +943,93 @@ class AnalizadorLexicoJS():
 
     ####################
 
+    def GenerarGrafoID(self, cadena):
+
+        # GENERA EL AUTOMATA DE UN ID
+        graph = open("grafo.txt", "w")
+        graph.write("digraph G { \n")
+
+        graph.write("q0 -> q1 [label= \"" + cadena[0] + "\" ] \n")
+        # toma el resto de la cadena
+        aux = cadena[1:]
+        content = ""
+
+        # estado de aceptación
+        for letra in aux:
+            graph.write("q1 -> q1 [label= \"" + letra + "\" ] \n")
+
+        graph.write("q1[peripheries=2] \n")
+        graph.write("{ rank = \"same\"; q0; q1; }\n")
+        graph.write("}")
+        graph.close()
+        os.system('cmd /c "dot -Tjpg grafo.txt -o grafoID.jpg"')
+
+    ####################
+
+    def ver_subcadena(self, s, w):
+        return (' ' + w + ' ') in (' ' + s + ' ')
+
+    ####################
+
+    def GenerarGrafoNum(self, num):
+
+        # GENERA EL AUTOMATA DE UN ID
+        graph = open("grafo_numero.txt", "w")
+        graph.write("digraph G { \n")
+
+        # 1. Verifico si es un decimal o entero
+        # 2. Si es numero entero solo lo hago con dos estados
+        # 3. Si tiene punto decimal hacerlo con tres estados
+
+        if self.ver_subcadena(num, '.'):
+            # hacerlo con tres estados
+            # partir numero en dos
+            num_aux = num.split(".")
+            print(num_aux[0])
+            print(num_aux[1])
+
+        else:
+            # hacerlo solo con dos estados
+            # si solo es un numero entero
+            graph.write("q0 -> q1 [label= \"" + num[0] + "\" ] \n")
+            # toma el resto de la cadena
+            aux = num[1:]
+            content = ""
+            # estado de aceptación (si es un numero entero)
+            for numero in aux:
+                graph.write("q1 -> q1 [label= \"" + numero + "\" ] \n")
+
+                #####
+            graph.write("q1[peripheries=2] \n")
+            graph.write("{ rank = \"same\"; q0; q1; }\n")
+
+        graph.write("}")
+        graph.close()
+        os.system('cmd /c "dot -Tjpg grafo_numero.txt -o grafo_numero.jpg"')
+
+    ####################
+
+    def GenerarGrafoCadenaTexto(self, cadena):
+        # GENERA EL AUTOMATA DE UN ID
+        graph = open("grafo_cadena.txt", "w")
+        graph.write("digraph G { \n")
+
+        aux1 = cadena[0]
+        aux2 = cadena[1:-1]
+        aux3 = cadena[-1]
+
+        graph.write("q0 -> q1 [label= \"" + aux1 + "\" ]; \n")
+
+        for letra in aux2:
+            graph.write("q1 -> q1 [label = \""+letra + "\"]; \n")
+
+        graph.write("q1 -> q2 [label= \"" + aux3 + "\" ]; \n")
+        graph.write("q2[peripheries=2] \n")
+        graph.write("}")
+        graph.close()
+        os.system('cmd /c "dot -Tjpg grafo_cadena.txt -o grafoCadena.jpg"')
+
+    ####################
     def GenerarReporte(self):
         # Generar reporte de errores y crea el archivo de acuerdo al directorio dado al inicio del archivo JS
         contador = 1  # contador del numero de errores

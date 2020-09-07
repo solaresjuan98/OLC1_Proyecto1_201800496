@@ -1,0 +1,11 @@
+digraph G { 
+q0 -> q1 [label= "s" ] 
+q1 -> q1 [label= "e" ] 
+q1 -> q1 [label= "s" ] 
+q1 -> q1 [label= "s" ] 
+q1 -> q1 [label= "i" ] 
+q1 -> q1 [label= "o" ] 
+q1 -> q1 [label= "n" ] 
+q1[peripheries=2] 
+{ rank = "same"; q0; q1; }
+}

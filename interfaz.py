@@ -8,7 +8,8 @@ import re
 # Analizadores
 from Analizadores.AnalizadorLexicocss import *
 from Analizadores.AnalizadorLexicoJS import *
-# función para abrir archivo de texto
+from Analizadores.AnalizadorLexicohtml import *
+
 
 textoArchivo = ""
 bitacora = ""
@@ -18,7 +19,7 @@ def abrirArchivo():
     # ABRIENDO ARCHIVO
     filename = filedialog.askopenfilename(
         initialdir="C://Users//jsola//Desktop", title="Seleccionar archivo",
-        filetypes=(("archivos javascript", "*.js"), ("archivos HTML", "*.html"), ("archivos CSS", "*.css")))
+        filetypes=(("archivos javascript", "*.js"), ("archivos HTML", "*.html"), ("archivos CSS", "*.css"), ("archivos rmt", "*.rmt")))
     # imprime la ruta
     ruta = filename
     # print(filename)
@@ -44,7 +45,6 @@ def limpiarCajaTexto():
 
 #######################
 
-
 def analizarEntrada():
     # atrapa la extensión del archivo
     ext = labelFormato['text']
@@ -60,7 +60,9 @@ def analizarEntrada():
         analizadorJS.ImprimirListaTokens()
         analizadorJS.GenerarReporte()
         analizadorJS.GenerarSalida()
-
+        tokens = analizadorJS.ImprimirListaTokens()
+        textoSalida.insert(INSERT, "\t :: LISTADO DE TOKENS :: \n")
+        textoSalida.insert(INSERT, tokens)
         print(analizadorJS.fila)
     elif ext == ".css":
         #print("Es un archivo CSS")
@@ -77,11 +79,16 @@ def analizarEntrada():
         print(analizadorCSS.fila)
     elif ext == ".html":
         print("Es un archivo HTML")
+        entrada = textoEntrada.get("1.0", "end-1c")
+        MessageBox.showinfo("Aviso", "Analisis del archivo HTML iniciado")
+    elif ext == ".rmt":
+        print("Es un archivo rmt")
+        entrada = textoEntrada.get("1.0", "end-1c")
+        MessageBox.showinfo("Aviso", "Analisis del archivo rmt iniciado")
     else:
         print("Formato no permitido / archivo no cargado")
 
 #######################
-
 
 def colorearJS():
     pass

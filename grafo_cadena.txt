@@ -1,0 +1,8 @@
+digraph G { 
+q0 -> q1 [label= "'" ]; 
+q1 -> q1 [label = "2"]; 
+q1 -> q1 [label = "0"]; 
+q1 -> q1 [label = "0"]; 
+q1 -> q2 [label= "'" ]; 
+q2[peripheries=2] 
+}
