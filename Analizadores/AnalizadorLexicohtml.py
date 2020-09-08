@@ -16,10 +16,17 @@ class TokenHTML(Enum):
     ETIQUETA_H1 = "etiqueta h1"
     ETIQUETA_H2 = "etiqueta h2"
     ETIQUETA_H3 = "etiqueta h3"
-    ETIQUETA_P = "p"
+    ETIQUETA_H4 = "etiqueta h4"
+    ETIQUETA_H5 = "etiqueta h5"
+    ETIQUETA_H6 = "etiqueta h6"
+
+    ETIQUETA_P = "etiqueta p"
+    ETIQUETA_BR = "etiqueta br"
 
     # imagen
     ETIQUETA_IMG = "etiqueta img"
+
+    ETIQUETA_STYLE = "etiqueta style"
 
     # Listas e indices
     ETIQUETA_UL = "etiqueta ul"
@@ -41,6 +48,8 @@ class TokenHTML(Enum):
     # Hipervinculos
     ETIQUETA_A = "etiqueta hipervinculo"
 
+    # Otros
+    COMENTARIO = "Comentario"
 
     def __init__(self, token):
         super().__init__()
@@ -60,10 +69,11 @@ class AnalizadorLexicohtml():
 
         self.listaTokens = []
         self.listaErroresLex = []
-        self.salida = []
+        self.salida = ""
         self.estado = 0
         self.fila = 1
         self.col = 1
+        self.rutaSalida = ""
 
     #####################
 
@@ -81,38 +91,50 @@ class AnalizadorLexicohtml():
             """
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
-                #print("Estoy en estado 0 ", entrada[letra])
+                # print("Estoy en estado 0 ", entrada[letra])
                 cadena = ""
                 range(len(entrada) - 1)
                 if entrada[letra] == "<":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 1
                 elif entrada[letra].isdigit() or entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 5
                 elif entrada[letra] == "\n":
+                    self.salida += entrada[letra]
                     self.fila += 1
                     self.col = 1
                 elif entrada[letra] == "\t":
+                    self.salida += entrada[letra]
                     self.col += 4
             ##
             elif estado == 1:
                 #print("Estoy en estado 1", entrada[letra])
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 3
                 elif entrada[letra] == "/":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 2
+                elif entrada[letra] == "!":
+                    self.salida += entrada[letra]
+                    #cadena += entrada[letra]
+                    self.col += 1
+                    estado = 7
             ##
             elif estado == 2:
-                #print("Estoy en estado 2", entrada[letra])
+                print("Estoy en estado 2", entrada[letra])
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 3
             ##
@@ -120,24 +142,60 @@ class AnalizadorLexicohtml():
                 #print("Estoy en estado 3", entrada[letra])
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
+                elif entrada[letra] == "=":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                # Si se reconoce una comilla doble
                 elif entrada[letra] == "\"":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 6
                 elif entrada[letra] == "\n":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.fila += 1
                 elif entrada[letra] == ">":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 4
+
+                # Reconociendo Errores lexicos en HTML
+                # - Reconocer el token hasta el momento?
+                else:
+                    error = ""
+                    error += entrada[letra]
+                    self.AgregarError(error, self.fila, self.col)
+                    cadena = ""
+                    estado = 0
+                """
+                elif entrada[letra] == "@":
+                    
+                    self.AgregarError(entrada[letra], self.fila, self.col)
+                    self.col += 1
+                    estado = 0
+                    cadena = ""
+                elif entrada[letra] == "#":
+                    self.AgregarError(entrada[letra], self,fila, self.col)
+                    self.col += 1
+                    cadena = ""
+                elif entrada[letra] == "%":
+                    self.AgregarError(entrada[letra], self.fila, self.col)
+                    self.col += 1
+                    estado = 0
+                    cadena = """
             ##
             elif estado == 4:
                 #print("Estoy en estado 4")
@@ -148,23 +206,27 @@ class AnalizadorLexicohtml():
                 estado = 0
             ##
             elif estado == 5:
-
+                #print("Estoy en estado 5")
                 if entrada[letra].isalpha() or entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 5
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     #estado = 5
                 elif entrada[letra] == "<":
-                    ## agregar lo que se llevaba antes a la lista
+                    
+                    # agregar lo que se llevaba antes a la lista
                     self.listaTokens.append(["Texto / contenido", cadena])
                     self.col += 1
-                    ## borro la cadena
+                    # borro la cadena
                     cadena = ""
-                    ## concateno la nueva cadena y la mando al estado 1 para reconocer una etiqueta
+                    # concateno la nueva cadena y la mando al estado 1 para reconocer una etiqueta
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     estado = 1
 
                 # detectar tambien simbolos
@@ -174,40 +236,128 @@ class AnalizadorLexicohtml():
                     estado = 0
             ##
             elif estado == 6:
-
+                #print("Estoy en estado 6")
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra].isdigit():
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == "=":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == "/":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == ":":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == "-":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == ".":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == " ":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == "\"":
                     cadena += entrada[letra]
+                    self.salida += entrada[letra]
                     self.col += 1
                     estado = 3
+                elif entrada[letra] == "\n":
+                    #cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.fila += 1
+                    estado = 3
+            ##
+            elif estado == 7:
+
+                if entrada[letra] == "-":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 8
+            ##
+            elif estado == 8:
+
+                if entrada[letra] == "-":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 9
+            ##
+            elif estado == 9:
+
+                if entrada[letra].isalpha():
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra].isdigit():
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ":":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == " ":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "/":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "\\":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ".":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "-":
+                    self.salida += entrada[letra]
+                    estado = 10
+            ##
+            elif estado == 10:
+                if entrada[letra] == "-":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 11
+            ##
+            elif estado == 11:
+                if entrada[letra] == ">":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 12
+            ##
+            elif estado == 12:
+
+                # Aceptando el comentario que contiene la ruta
+                token = TokenHTML(TokenHTML.COMENTARIO)
+                self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+                aux = cadena.replace("<", "")
+                if self.VerificarRuta(aux, 'PATHW:'):
+
+                    cadena.replace("PATHW:", "")
+                    
+                cadena = ""
+                estado = 0
+
 
     #####################
 
     def AgregarToken(self, cadena):
-        ## print(cadena)
+        # print(cadena)
         # clasificar las etiquetas para agregarlas a la lista
         if cadena == "<html>" or cadena == "</html>":
             token = TokenHTML(TokenHTML.ETIQUETA_HTML)
@@ -242,6 +392,18 @@ class AnalizadorLexicohtml():
             token = TokenHTML(TokenHTML.ETIQUETA_H3)
             self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
         ##
+        elif cadena == "<h4>" or cadena == "</h4>":
+            token = TokenHTML(TokenHTML.ETIQUETA_H4)
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+        ##
+        elif cadena == "<h5>" or cadena == "</h5>":
+            token = TokenHTML(TokenHTML.ETIQUETA_H5)
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+        ##
+        elif cadena == "<h6>" or cadena == "</h6>":
+            token = TokenHTML(TokenHTML.ETIQUETA_H6)
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+        ##
 
         # LISTAS
         elif cadena == "<li>" or cadena == "</li>":
@@ -263,7 +425,7 @@ class AnalizadorLexicohtml():
             self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
         elif cadena == "<tr>" or cadena == "</tr>":
             token = TokenHTML(TokenHTML.ETIQUETA_TR)
-            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])   
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
         elif cadena == "<caption>" or cadena == "</caption>":
             token = TokenHTML(TokenHTML.ETIQUETA_CAPTION)
             self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
@@ -285,8 +447,79 @@ class AnalizadorLexicohtml():
         elif "img" in cadena:
             token = TokenHTML(TokenHTML.ETIQUETA_IMG)
             self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
-    
+        elif "style" in cadena:
+            token = TokenHTML(TokenHTML.ETIQUETA_STYLE)
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+        elif "a href" in cadena:
+            token = TokenHTML(TokenHTML.ETIQUETA_A)
+            self.listaTokens.append([token.ObtenerTipoTokenHTML(), cadena])
+
     #####################
+
+    def AgregarError(self, caracter, fila, col):
+        # validar los errores
+        if caracter == "@":
+            #print("Error lexico @", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "#":
+            # print("Error lexico #", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "|":
+            #print("Error lexico |", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "¿":
+            #print("error lexico ¿", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "´":
+            #print("error lexico ´", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "~":
+            #print("error lexico ~", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "^":
+            #print("error lexico ^", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "_":
+            #print("error lexico _", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "?":
+            #print("error lexico ?", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "$":
+            #print("error lexico $", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+        elif caracter == "%":
+            #print("error lexico %", "fila:", fila, "col: ", col)
+            self.listaErroresLex.append([fila, col, caracter])
+
+    #####################
+
+    def VerificarRuta(self, p1, p2):
+        aux = p1.replace(p2, "")
+        ruta = ""
+        ruta = aux.replace(" ", "")
+        ruta = ruta.replace("\\\\\\", "\\")
+        print(ruta)
+        try:
+            if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
+                archivo = open(ruta, "w+")
+                archivo.write("prueba jeje")
+                archivo.close()
+        except IndexError:
+            pass
+
+        return (' ' + p2 + ' ') in (' ' + p1 + ' ')
+
+    ####################
+
+    def GenerarSalida(self):
+
+        salida = open("salida.html", "w")
+        salida.write(self.salida)
+        salida.close()
+
+
+    ####################
 
     def imprimirListaTokens(self):
         contenido = ""
@@ -300,7 +533,77 @@ class AnalizadorLexicohtml():
 
         return contenido
 
+    #####################
 
     def GenerarReporteErrores(self):
-        pass
 
+        # Generar reporte de errores y crea el archivo de acuerdo al directorio dado al inicio del archivo JS
+        contador = 1  # contador del numero de errores
+        reporte = open("Reportes/ErroresHTML.html", "w")
+
+        contenido = "<!DOCTYPE html>"\
+                    "<html lang=\"en\">"\
+                    "<head>"\
+                    "<meta charset=\"UTF-8\">"\
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"\
+                    "<link href=\"https://fonts.googleapis.com/css2?family=Mulish:wght@300&family=Roboto:wght@300;400&display=swap\""\
+                    "rel=\"stylesheet\">"\
+                    "<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\"/>"\
+                    "<link rel=\"stylesheet\" type=\"text/css\" href=\"responsive.css\"/>"\
+                    "<title>Reporte</title>"\
+                    "</head>"\
+                    "<body>"\
+                    "<header id=\"header\">"\
+                    "<div class=\"center\">"\
+                    "<div id=\"logo\">"\
+                    "<h2>Analizador html</h2>"\
+                    "</div>"\
+                    "<div class=\"clearfix\"></div>"\
+                    "</div>"\
+                    "</header>"\
+                    "<section id=\"content\">"\
+                    "<h2 class=\"subtitle\">Errores encontrados</h2>"\
+                    "<div id=\"tasks\">"\
+                    "<br><br>"\
+                    "<table class=\"card\">"\
+                    "<tr>"\
+                    "<th>No</th>"\
+                    "<th>Fila</th>"\
+                    "<th>Columna</th>"\
+                    "<th>Descripcion</th>"\
+                    "</tr>"\
+
+        reporte.write(contenido)
+
+        for error in self.listaErroresLex:
+            contenido2 = "<tr>"\
+                "<td>"\
+                + str(contador) +\
+                "</td>"\
+                "<td>"\
+                + str(error[0]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[1]) +\
+                "</td>"\
+                "<td>"\
+                + str(error[2]) +\
+                "</td>"\
+                "</tr>"\
+                "\n"
+            contador += 1
+            reporte.write(contenido2)
+
+        contenido3 = "</table>"\
+                     "</div>"\
+                     "</section>"\
+                     "</body>"\
+                     "</html>"\
+                     ""\
+
+        reporte.write(contenido3)
+        reporte.close()
+        os.startfile(
+            "C:\\Users\\jsola\\Desktop\\Proyecto1_Compiladores\\Reportes\\ErroresHTML.html")
+
+        pass

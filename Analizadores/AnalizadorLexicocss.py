@@ -5,6 +5,7 @@ from enum import Enum
 from io import open
 import os
 
+
 class Tokencss(Enum):
     # selectores
     """ palabras reservadas de html como p, h1, *(universal), ID, clases, pseudoclases div etc...
@@ -52,6 +53,7 @@ class Tokencss(Enum):
 
 #####
 
+
 class AnalizadorLexicocss():
 
     def __init__(self):
@@ -64,7 +66,6 @@ class AnalizadorLexicocss():
         self.estado = 0
         self.fila = 1
         self.columna = 1
-        
 
     ####################
 
@@ -253,13 +254,13 @@ class AnalizadorLexicocss():
                 elif entrada[letra] == "\t":
                     self.fila += 4
                     print("Tabulación")
-                
-                ## ATRAPAR ERRORES
+
+                # ATRAPAR ERRORES
                 else:
                     cadena += entrada[letra]
                     self.AgregarError(cadena, self.fila, self.columna)
                     self.columna += 1
-                    cadena == ""       
+                    cadena == ""
             ##
             elif estado == 1:
                 self.salida += "Analizador en estado 1\n"
@@ -527,78 +528,108 @@ class AnalizadorLexicocss():
                     self.columna += 1
                     #print("Lei un guion bajo")
                 elif entrada[letra] == "*":
-                    print("Error lexico *", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico *", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "$":
-                    print("Error lexico $", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico $", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "@":
-                    print("Error lexico @", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico @", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "%":
-                    print("Error lexico %", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico %", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "¬":
-                    print("Error lexico ¬", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico ¬", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "|":
-                    print("Error lexico |", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico |", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "°":
-                    print("Error lexico °", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico °", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == ">":
-                    print("Error lexico >", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico >", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "<":
-                    print("Error lexico <", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico <", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "+":
-                    print("Error lexico +", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico +", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "=":
-                    print("Error lexico =", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico =", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "~":
-                    print("Error lexico ~", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico ~", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "/":
-                    print("Error lexico /", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico /", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "?":
-                    print("Error lexico ?", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico ?", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 elif entrada[letra] == "¿":
-                    print("Error lexico ¿", "fila:", self.fila, "col: ", self.columna)
-                    self.listaErroresLex.append([self.fila, self.columna, entrada[letra]])
+                    print("Error lexico ¿", "fila:",
+                          self.fila, "col: ", self.columna)
+                    self.listaErroresLex.append(
+                        [self.fila, self.columna, entrada[letra]])
                     self.columna += 1
                     estado = 0
                 else:  # aceptar el ID o detectar el error lexico
@@ -951,23 +982,8 @@ class AnalizadorLexicocss():
 
     ####################
 
-    def VerificarRuta(self, p1, p2):
-        aux = p1.replace(p2, "")
-        print("aux: ", aux)
-        ruta = ""
-        ruta = aux.replace(" ", "")
-        print("Ruta: ",ruta)
-        ruta = ruta.replace("\\\\\\", "\\")
-        print(ruta)
-        if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
-            archivo = open(ruta, "w+")
-            archivo.write("prueba jeje")
-            archivo.close()
-        return (' ' + p2 + ' ') in (' ' + p1 + ' ')
-
-    ####################
     def AgregarError(self, caracter, fila, col):
-         # validar los caracteres que sean erroes y agregarlos a la lista de errores
+        # validar los caracteres que sean erroes y agregarlos a la lista de errores
         if caracter == "@":
             print("Error lexico @", "fila:", fila, "col: ", col)
             self.listaErroresLex.append([fila, col, caracter])
@@ -1032,6 +1048,24 @@ class AnalizadorLexicocss():
         # print(bitacora)
         return bitacora
         # imprimir lista de errores
+
+    ####################
+
+    def VerificarRuta(self, p1, p2):
+        aux = p1.replace(p2, "")
+        ruta = ""
+        ruta = aux.replace(" ", "")
+        ruta = ruta.replace("\\\\\\", "\\")
+
+        try:
+            if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
+                archivo = open(ruta, "w+")
+                archivo.write("prueba jeje")
+                archivo.close()
+        except IndexError:
+            pass
+
+        return (' ' + p2 + ' ') in (' ' + p1 + ' ')
 
     ####################
 
@@ -1112,4 +1146,7 @@ class AnalizadorLexicocss():
         reporte.write(contenido3)
         reporte.close()
 
-        os.startfile("C:\\Users\\jsola\\Desktop\\Proyecto1_Compiladores\\Reportes\\ErroresCSS.html")
+        os.startfile(
+            "C:\\Users\\jsola\\Desktop\\Proyecto1_Compiladores\\Reportes\\ErroresCSS.html")
+
+    ####################

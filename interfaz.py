@@ -82,13 +82,14 @@ def analizarEntrada():
     elif ext == ".html":
 
         entrada = textoEntrada.get("1.0", "end-1c")
-        #print(entrada)
         MessageBox.showinfo("Aviso", "Analisis del archivo HTML iniciado")
         analizadorHTML = AnalizadorLexicohtml()
         analizadorHTML.Escanear(entrada)
         tokensHTML = analizadorHTML.imprimirListaTokens()
         textoSalida.insert(INSERT, "\t :: LISTADO DE TOKENS :: \n")
         textoSalida.insert(INSERT, tokensHTML)
+        analizadorHTML.GenerarReporteErrores()
+        analizadorHTML.GenerarSalida()
         print(analizadorHTML.fila)
         
 

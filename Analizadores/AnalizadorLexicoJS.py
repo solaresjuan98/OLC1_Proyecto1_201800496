@@ -295,7 +295,7 @@ class AnalizadorLexicoJS():
                 # ATRAPAR ERRORES
                 else:
                     cadena += entrada[letra]
-                    self.EliminarError(cadena)
+                    #self.EliminarError(cadena)
                     self.AgregarError(cadena, self.fila, self.col)
                     self.col += 1
                     cadena == ""
@@ -729,7 +729,7 @@ class AnalizadorLexicoJS():
 
                 if banderaCadena == False:
                     self.GenerarGrafoCadenaTexto(cadena)
-                    banderaComentario = True
+                    banderaCadena = True
 
                 cadena = ""
                 estado = 0
@@ -1010,7 +1010,7 @@ class AnalizadorLexicoJS():
     ####################
 
     def GenerarGrafoCadenaTexto(self, cadena):
-        # GENERA EL AUTOMATA DE UN ID
+        # GENERA EL AUTOMATA DE UNA CADENA DET
         graph = open("grafo_cadena.txt", "w")
         graph.write("digraph G { \n")
 
