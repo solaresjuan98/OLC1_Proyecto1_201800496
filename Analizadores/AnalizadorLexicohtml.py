@@ -91,7 +91,7 @@ class AnalizadorLexicohtml():
             """
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
-                # print("Estoy en estado 0 ", entrada[letra])
+                print("Estoy en estado 0 ", entrada[letra])
                 cadena = ""
                 range(len(entrada) - 1)
                 if entrada[letra] == "<":
@@ -111,6 +111,72 @@ class AnalizadorLexicohtml():
                 elif entrada[letra] == "\t":
                     self.salida += entrada[letra]
                     self.col += 4
+                ## AGREGANDO SIMBOLOS (QUE VIENEN FUERA DE LAS ETIQUETAS)
+                # QUE DENTRO DE LA ETIQUETA SERÍA ERROR LEXICO
+
+                elif entrada[letra] == "@":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "#":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "$":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¿":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "?":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "!":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¡":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "/":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "&":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "%":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "=":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "-":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "+":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "*":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "~":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "\\":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¬":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "°":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "\"":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "'":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "|":
+                    self.salida += entrada[letra]
+                    self.col += 1    
             ##
             elif estado == 1:
                 #print("Estoy en estado 1", entrada[letra])
@@ -178,8 +244,9 @@ class AnalizadorLexicohtml():
                     error = ""
                     error += entrada[letra]
                     self.AgregarError(error, self.fila, self.col)
-                    cadena = ""
-                    estado = 0
+                    error = ""
+                    #cadena = ""
+                    #estado = 0
                 """
                 elif entrada[letra] == "@":
                     
@@ -199,14 +266,21 @@ class AnalizadorLexicohtml():
             ##
             elif estado == 4:
                 #print("Estoy en estado 4")
+                if entrada[letra].isalpha():
+                    self.AgregarToken(cadena)
+                    cadena = ""
+                    cadena += entrada[letra]
+                    estado = 5
+                else:
                 # Estado de aceptación de cualquier etiqueta html
-                self.AgregarToken(cadena)
-                range(len(entrada) - 1)
-                cadena = ""
-                estado = 0
+                    self.AgregarToken(cadena)
+                    range(len(entrada) - 1)
+                    #cadena = ""
+                    estado = 0
             ##
             elif estado == 5:
                 #print("Estoy en estado 5")
+                print("Estoy en estado 5 ", entrada[letra])
                 if entrada[letra].isalpha() or entrada[letra].isdigit():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -217,6 +291,95 @@ class AnalizadorLexicohtml():
                     self.salida += entrada[letra]
                     self.col += 1
                     #estado = 5
+                elif entrada[letra] == ".":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "@":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "#":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "$":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¿":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "?":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "!":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¡":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "/":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "&":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "%":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "=":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "-":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "+":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "*":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "~":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "\\":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "¬":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "°":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "\"":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "'":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "|":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1   
+
                 elif entrada[letra] == "<":
                     
                     # agregar lo que se llevaba antes a la lista
@@ -266,6 +429,10 @@ class AnalizadorLexicohtml():
                     self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == " ":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ";":
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
                     self.col += 1
@@ -321,6 +488,10 @@ class AnalizadorLexicohtml():
                     self.salida += entrada[letra]
                     self.col += 1
                 elif entrada[letra] == ".":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ";":
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
                     self.col += 1
