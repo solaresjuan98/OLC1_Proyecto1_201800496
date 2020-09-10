@@ -1,0 +1,4 @@
+
+
+class AnalizadorSintactico():
+    pass

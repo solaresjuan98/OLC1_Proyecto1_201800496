@@ -9,7 +9,7 @@ import re
 from Analizadores.AnalizadorLexicocss import *
 from Analizadores.AnalizadorLexicoJS import *
 from Analizadores.AnalizadorLexicohtml import *
-
+from Analizadores.Lexrmt import *
 
 textoArchivo = ""
 bitacora = ""
@@ -92,11 +92,14 @@ def analizarEntrada():
         analizadorHTML.GenerarSalida()
         print(analizadorHTML.fila)
         
-
     elif ext == ".rmt":
         print("Es un archivo rmt")
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo("Aviso", "Analisis del archivo rmt iniciado")
+        analizadorRMT = Lexrmt()
+        analizadorRMT.Escanear(entrada)
+        analizadorRMT.imprimirListaTokens()
+    
     else:
         print("Formato no permitido / archivo no cargado")
 

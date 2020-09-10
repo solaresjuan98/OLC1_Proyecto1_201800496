@@ -275,8 +275,12 @@ class AnalizadorLexicohtml():
                 # Estado de aceptación de cualquier etiqueta html
                     self.AgregarToken(cadena)
                     range(len(entrada) - 1)
-                    #cadena = ""
+                    cadena = ""
                     estado = 0
+
+                    if entrada[letra].isalpha():
+                        cadena += entrada[letra]
+                        estado = 5
             ##
             elif estado == 5:
                 #print("Estoy en estado 5")
