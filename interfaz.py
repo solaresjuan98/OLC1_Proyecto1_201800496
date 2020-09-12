@@ -1,3 +1,4 @@
+# Librerias de python
 from tkinter import *
 from tkinter import messagebox as MessageBox
 from io import open
@@ -5,11 +6,15 @@ from tkinter import filedialog
 import os
 import re
 
-# Analizadores
+# Analizadores lexicos
 from Analizadores.AnalizadorLexicocss import *
 from Analizadores.AnalizadorLexicoJS import *
 from Analizadores.AnalizadorLexicohtml import *
 from Analizadores.Lexrmt import *
+
+# Analizador sintactico de expresiones
+from Analizadores.AnalizadorSintactico import *
+from Analizadores.Sintactico import *
 
 textoArchivo = ""
 bitacora = ""
@@ -93,12 +98,21 @@ def analizarEntrada():
         print(analizadorHTML.fila)
         
     elif ext == ".rmt":
-        print("Es un archivo rmt")
+       
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo("Aviso", "Analisis del archivo rmt iniciado")
         analizadorRMT = Lexrmt()
         analizadorRMT.Escanear(entrada)
-        analizadorRMT.imprimirListaTokens()
+        analizadorRMT.imprimirExpresiones()
+        # Iniciar analisis sintactico
+        sintactico = Sintactico()
+        sintactico.Parse(analizadorRMT.listaExpr)
+        #print(sintactico.pilaVacia())
+        resultadoSintactico = sintactico.mostrarReporte()
+        textoSalida.insert(INSERT, resultadoSintactico)
+        
+        #sintactico = AnalizadorSintactico()
+        #sintactico.Parsear(analizadorRMT.ListaTokens)
     
     else:
         print("Formato no permitido / archivo no cargado")

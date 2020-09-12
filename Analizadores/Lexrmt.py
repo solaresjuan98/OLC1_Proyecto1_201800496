@@ -11,6 +11,7 @@ class Token(Enum):
     OP_DIVISION = "Operador division"
     PAR_IZQ = "Parentesis izq"
     PAR_DER = "Parentesis der"
+    SALTO_LINEA = "Salto de linea"
 
     def __init__(self, token):
         super().__init__()
@@ -35,14 +36,30 @@ class Lexrmt():
         self.ListaTokens = []
         self.ListaErroresLex = []
         self.salida = ""
+        self.listaExpr = []
 
     def Escanear(self, entrada):
         estado = self.estado
-        cadena = ""
+        expresion = ""
         # ESTADOS DE RECONOCIMIENTO DE TOKENS POR EL QUE PASARA EL ANALIZADOR LEXICO
 
         for letra in range(len(entrada)):
-
+            #expresion = ""
+            if entrada[letra].isdigit():
+                expresion += entrada[letra]
+            elif entrada[letra].isalpha():
+                expresion += entrada[letra]
+            elif entrada[letra] == "+" or entrada[letra] == "-" or entrada[letra] == "/"  or entrada[letra] == "*":
+                expresion += entrada[letra]
+            elif entrada[letra] == "(" or entrada[letra] == ")":
+                expresion += entrada[letra]
+            elif entrada[letra] == "\n":
+                #print(expresion)
+                ## 
+                expresion += entrada[letra]
+                self.listaExpr.append(expresion)
+                expresion = ""
+            """
             if estado == 0:
                 # print(entrada[letra])
 
@@ -82,12 +99,18 @@ class Lexrmt():
                     t = Token(Token.OP_DIVISION)
                     self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
                     cadena = ""
+                elif entrada[letra] == "\n":
+                    cadena += entrada[letra]
+                    t = Token(Token.SALTO_LINEA)
+                    self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                    cadena = ""
+            ##
             elif estado == 1:
 
                 # print(entrada[letra])
                 if entrada[letra].isdigit():
                     cadena += entrada[letra]
-                else: 
+                else:
                     t = Token(Token.NUM_ENTERO)
                     self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
                     estado = 0
@@ -95,36 +118,48 @@ class Lexrmt():
                     if entrada[letra] == "(":
                         cadena += entrada[letra]
                         t = Token(Token.PAR_IZQ)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == ")":
                         cadena += entrada[letra]
                         t = Token(Token.PAR_DER)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "+":
                         cadena += entrada[letra]
                         t = Token(Token.OP_SUMA)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "-":
                         cadena += entrada[letra]
                         t = Token(Token.OP_RESTA)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "*":
                         cadena += entrada[letra]
                         t = Token(Token.OP_MULT)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "/":
                         cadena += entrada[letra]
                         t = Token(Token.OP_DIVISION)
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
+                        cadena = ""
+                        estado = 0
+                    elif entrada[letra] == "\n":
+                        cadena += entrada[letra]
+                        t = Token(Token.SALTO_LINEA)
                         self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
@@ -143,41 +178,57 @@ class Lexrmt():
                     if entrada[letra] == "(":
                         cadena += entrada[letra]
                         t = Token(Token.PAR_IZQ)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == ")":
                         cadena += entrada[letra]
                         t = Token(Token.PAR_DER)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "+":
                         cadena += entrada[letra]
                         t = Token(Token.OP_SUMA)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "-":
                         cadena += entrada[letra]
                         t = Token(Token.OP_RESTA)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "*":
                         cadena += entrada[letra]
                         t = Token(Token.OP_MULT)
-                        self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
                     elif entrada[letra] == "/":
                         cadena += entrada[letra]
                         t = Token(Token.OP_DIVISION)
+                        self.ListaTokens.append(
+                            [t.ObtenerTipoTokenHTML(), cadena])
+                        cadena = ""
+                        estado = 0
+                    elif entrada[letra] == "\n":
+                        cadena += entrada[letra]
+                        t = Token(Token.SALTO_LINEA)
                         self.ListaTokens.append([t.ObtenerTipoTokenHTML(), cadena])
                         cadena = ""
                         estado = 0
-
-                    
+            """
+    
     def imprimirListaTokens(self):
         for token in self.ListaTokens:
             print(token)
+
+    def imprimirExpresiones(self):
+        for exp in self.listaExpr:
+            print(exp)
