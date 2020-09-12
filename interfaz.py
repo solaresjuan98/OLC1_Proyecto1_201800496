@@ -110,7 +110,7 @@ def analizarEntrada():
         #print(sintactico.pilaVacia())
         resultadoSintactico = sintactico.mostrarReporte()
         textoSalida.insert(INSERT, resultadoSintactico)
-        
+        sintactico.GenerarReporteErrores()
         #sintactico = AnalizadorSintactico()
         #sintactico.Parsear(analizadorRMT.ListaTokens)
     

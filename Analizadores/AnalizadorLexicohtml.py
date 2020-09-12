@@ -677,6 +677,7 @@ class AnalizadorLexicohtml():
         print(ruta)
         try:
             if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
+                self.rutaSalida = ruta
                 archivo = open(ruta, "w+")
                 archivo.write("prueba jeje")
                 archivo.close()
@@ -689,10 +690,9 @@ class AnalizadorLexicohtml():
 
     def GenerarSalida(self):
 
-        salida = open("salida.html", "w")
+        salida = open(self.rutaSalida, "w")
         salida.write(self.salida)
         salida.close()
-
 
     ####################
 

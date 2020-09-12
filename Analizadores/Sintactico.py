@@ -1,3 +1,5 @@
+from io import open
+import os
 
 class Sintactico():
 
@@ -55,7 +57,6 @@ class Sintactico():
         except:
             pass
 
-
     def mostrarReporte(self):
         result = ""
         for resultado in self.listaReporte:
@@ -65,4 +66,75 @@ class Sintactico():
 
         return result
 
+    def GenerarReporteErrores(self):
+        # Generar reporte de errores y crea el archivo de acuerdo al directorio dado al inicio del archivo JS
+        contador = 1  # contador del numero de errores
+        reporte = open("Reportes/ReporteRMT.html", "w")
+
+        contenido = "<!DOCTYPE html>"\
+                    "<html lang=\"en\">"\
+                    "<head>"\
+                    "<meta charset=\"UTF-8\">"\
+                    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"\
+                    "<link href=\"https://fonts.googleapis.com/css2?family=Mulish:wght@300&family=Roboto:wght@300;400&display=swap\""\
+                    "rel=\"stylesheet\">"\
+                    "<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\"/>"\
+                    "<link rel=\"stylesheet\" type=\"text/css\" href=\"responsive.css\"/>"\
+                    "<title>Reporte</title>"\
+                    "</head>"\
+                    "<body>"\
+                    "<header id=\"header\">"\
+                    "<div class=\"center\">"\
+                    "<div id=\"logo\">"\
+                    "<h2>Analizador .rmt</h2>"\
+                    "</div>"\
+                    "<div class=\"clearfix\"></div>"\
+                    "</div>"\
+                    "</header>"\
+                    "<section id=\"content\">"\
+                    "<h2 class=\"subtitle\">Resultados</h2>"\
+                    "<div id=\"tasks\">"\
+                    "<br><br>"\
+                    "<table class=\"card\">"\
+                    "<tr>"\
+                    "<th>No</th>"\
+                    "<th>Expresion</th>"\
+                    "<th>Resultado</th>"\
+                    "<th></th>"\
+                    "</tr>"\
+
+        reporte.write(contenido)
+
+        for resultado in self.listaReporte:
+            contenido2 = "<tr>"\
+                "<td>"\
+                + str(contador) +\
+                "</td>"\
+                "<td>"\
+                + resultado[0] +\
+                "</td>"\
+                "<td>"\
+                + resultado[1] +\
+                "</td>"\
+                "<td>"\
+                ""\
+                "</td>"\
+                "</tr>"\
+                "\n"
+            contador += 1
+            reporte.write(contenido2)
+
+        contenido3 = "</table>"\
+                     "</div>"\
+                     "</section>"\
+                     "</body>"\
+                     "</html>"\
+                     ""\
+
+        reporte.write(contenido3)
+        reporte.close()
+        os.startfile(
+            "C:\\Users\\jsola\\Desktop\\Proyecto1_Compiladores\\Reportes\\ReporteRMT.html")
+
+        
             
