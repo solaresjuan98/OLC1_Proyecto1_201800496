@@ -1,26 +1,17 @@
 digraph G { 
 q0 -> q1 [label= """ ]; 
-q1 -> q1 [label = "L"]; 
-q1 -> q1 [label = "a"]; 
-q1 -> q1 [label = " "]; 
-q1 -> q1 [label = "a"]; 
-q1 -> q1 [label = "l"]; 
-q1 -> q1 [label = "t"]; 
+q1 -> q1 [label = "J"]; 
 q1 -> q1 [label = "u"]; 
+q1 -> q1 [label = "a"]; 
+q1 -> q1 [label = "n"]; 
+q1 -> q1 [label = " "]; 
+q1 -> q1 [label = "S"]; 
+q1 -> q1 [label = "o"]; 
+q1 -> q1 [label = "l"]; 
+q1 -> q1 [label = "a"]; 
 q1 -> q1 [label = "r"]; 
-q1 -> q1 [label = "a"]; 
-q1 -> q1 [label = " "]; 
-q1 -> q1 [label = "d"]; 
-q1 -> q1 [label = "e"]; 
-q1 -> q1 [label = "l"]; 
-q1 -> q1 [label = " "]; 
-q1 -> q1 [label = "b"]; 
-q1 -> q1 [label = "u"]; 
-q1 -> q1 [label = "s"]; 
-q1 -> q1 [label = " "]; 
 q1 -> q1 [label = "e"]; 
 q1 -> q1 [label = "s"]; 
-q1 -> q1 [label = " "]; 
 q1 -> q2 [label= """ ]; 
 q2[peripheries=2] 
 }

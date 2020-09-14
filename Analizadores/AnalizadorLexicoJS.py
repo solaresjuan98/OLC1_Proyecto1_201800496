@@ -128,7 +128,7 @@ class AnalizadorLexicoJS():
                 estado = 5 (comentario multilinea)
                 estado = 6 (Identificador)
                 estado = 7 y 8 (Numeros enteros / con punto decimal)
-                estado = 9 (expresiones relacionaes)
+                estado = 9 (expresiones relacionales)
                 estado = 13 (cadenas de texto)
             """
             # ESTADOS DE ANALIZADOR LEXICO
@@ -295,7 +295,7 @@ class AnalizadorLexicoJS():
                 # ATRAPAR ERRORES
                 else:
                     cadena += entrada[letra]
-                    #self.EliminarError(cadena)
+                    # self.EliminarError(cadena)
                     self.AgregarError(cadena, self.fila, self.col)
                     self.col += 1
                     cadena == ""
@@ -353,6 +353,7 @@ class AnalizadorLexicoJS():
                 elif entrada[letra] == "\n":
                     self.fila += 1
                     self.col = 1
+                    self.salida += entrada[letra]
                     token_ = TokenJavascript(TokenJavascript.COMENTARIO)
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenJS(), cadena])
@@ -527,7 +528,7 @@ class AnalizadorLexicoJS():
                     self.salida += entrada[letra]
                     self.col += 1
                     estado = 0
-                elif entrada[letra] == "." or entrada[letra] == "," or entrada[letra] == ":":
+                elif entrada[letra] == "." or entrada[letra] == "," or entrada[letra] == ":" or entrada[letra] == ";":
                     self.AgregarToken(cadena)
                     self.salida += entrada[letra]
                     self.col += 1
@@ -622,6 +623,22 @@ class AnalizadorLexicoJS():
                         self.GenerarGrafoNum(cadena)
                         banderaNum = True
 
+                    elif entrada[letra] == "(":
+                        self.AgregarToken(cadena)
+                        self.salida += entrada[letra]
+                        self.col += 1
+                        estado = 0
+                    elif entrada[letra] == ")":
+                        self.AgregarToken(cadena)
+                        self.salida += entrada[letra]
+                        self.col += 1
+                        estado = 0
+                    elif entrada[letra] == "." or entrada[letra] == "," or entrada[letra] == ":":
+                        self.AgregarToken(cadena)
+                        self.salida += entrada[letra]
+                        self.col += 1
+                        estado = 0
+
                     cadena = ""
                     estado = 0
             ##
@@ -655,6 +672,12 @@ class AnalizadorLexicoJS():
                     self.AgregarError(entrada[letra], self.fila, self.col)
                     cadena = ""
                     estado = 0
+
+                    if entrada[letra] == ">":
+                        self.salida += entrada[letra]
+                        #cadena += entrada[letra]
+                        self.col += 1
+                        estado = 0
             ##
             elif estado == 10:
                 self.ClasificarExpr(cadena)
@@ -694,6 +717,16 @@ class AnalizadorLexicoJS():
                     self.salida += entrada[letra]
                     self.col += 1
                     estado = 12
+                elif entrada[letra] == ",":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 12
+                elif entrada[letra] == ":":
+                    cadena += entrada[letra]
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 12
             ##
             elif estado == 12:
 
@@ -721,6 +754,30 @@ class AnalizadorLexicoJS():
                     self.salida += entrada[letra]
                     cadena += entrada[letra]
                     self.col += 1
+                elif entrada[letra] == ".":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ">":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "[":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "]":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "_":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ":":
+                    self.salida += entrada[letra]
+                    cadena += entrada[letra]
+                    self.col += 1
                 elif entrada[letra] == "\"" or entrada[letra] == "'":
                     self.salida += entrada[letra]
                     cadena += entrada[letra]
@@ -735,6 +792,25 @@ class AnalizadorLexicoJS():
                 if banderaCadena == False:
                     self.GenerarGrafoCadenaTexto(cadena)
                     banderaCadena = True
+
+                if entrada[letra] == ")" or entrada[letra] == "(":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ".":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ",":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == "+":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ";":
+                    self.salida += entrada[letra]
+                    self.col += 1
+                elif entrada[letra] == ":":
+                    self.salida += entrada[letra]
+                    self.col += 1
 
                 cadena = ""
                 estado = 0
@@ -763,13 +839,13 @@ class AnalizadorLexicoJS():
         lista = self.listaTokens
         for token in lista:
             contenido += "Tipo: "\
-                        + str(token[0]) +\
-                        " VALOR: "\
-                        + str(token[1]) +\
-                        "\n"\
+                + str(token[0]) +\
+                " VALOR: "\
+                + str(token[1]) +\
+                "\n"\
 
         return contenido
-    
+
     ####################
 
     def AgregarError(self, caracter, fila, col):
