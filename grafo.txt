@@ -1,15 +1,10 @@
 digraph G { 
-q0 -> q1 [label= "c" ] 
+q0 -> q1 [label= "m" ] 
 q1 -> q1 [label= "o" ] 
-q1 -> q1 [label= "n" ] 
-q1 -> q1 [label= "s" ] 
-q1 -> q1 [label= "t" ] 
-q1 -> q1 [label= "r" ] 
-q1 -> q1 [label= "u" ] 
-q1 -> q1 [label= "c" ] 
-q1 -> q1 [label= "t" ] 
+q1 -> q1 [label= "d" ] 
+q1 -> q1 [label= "e" ] 
+q1 -> q1 [label= "l" ] 
 q1 -> q1 [label= "o" ] 
-q1 -> q1 [label= "r" ] 
 q1[peripheries=2] 
 { rank = "same"; q0; q1; }
 }

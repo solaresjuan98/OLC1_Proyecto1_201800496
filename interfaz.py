@@ -80,6 +80,7 @@ def analizarEntrada():
         analizadorCSS.ImprimirListaErrores()
         analizadorCSS.GenerarReporte()
         bitacora = analizadorCSS.GenerarBitacora()
+        analizadorCSS.GenerarArchivoSalida()
         textoSalida.insert(INSERT, bitacora)
         # print(bitacora)
         print(analizadorCSS.fila)
@@ -170,19 +171,32 @@ labelFormato = Label(ventana, text="")
 labelFormato.place(x=120, y=10)
 labelFormato.config(padx=5, pady=5, font=("sans-serif", 10))
 
+## scroll bar1 
+scrollbar1 = Scrollbar(ventana)
+scrollbar1.pack(side=RIGHT, fill = Y)
+
+## CAJA TEXTO ENTRADA 
 textoEntrada = Text(ventana)
 textoEntrada.place(x=10, y=60)
-textoEntrada.config(width=65, height=35, font=("Consolas", 9),
-                    padx=5, pady=5)
 textoEntrada.insert(INSERT, textoArchivo)
+textoEntrada.config(width=65, height=35, font=("Consolas", 9),
+                    padx=5, pady=5 , yscrollcommand=scrollbar1.set)
+scrollbar1.config(command=textoEntrada.yview)
 
+
+## scroll bar1 
+scrollbar2 = Scrollbar(ventana)
+scrollbar2.pack(side=RIGHT, fill =Y)
+
+## CAJA TEXTO QUE MUESTRA LA SALIDA
 textoSalida = Text(ventana)
 textoSalida.place(x=505, y=60)
 textoSalida.config(width=60, height=35, font=("Consolas", 9),
-                   padx=5, pady=5)
+                   padx=5, pady=5,yscrollcommand=scrollbar2.set)
+scrollbar2.config(command=textoSalida.yview)
+
 
 # BOTONES
-
 botonAnalizar = Button(ventana, text="Analizar")
 botonAnalizar.place(x=780, y=10)
 botonAnalizar.config(padx=3, pady=3, font=(

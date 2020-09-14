@@ -517,6 +517,11 @@ class AnalizadorLexicoJS():
                     self.salida += entrada[letra]
                     self.col += 1
                     estado = 0
+                elif entrada[letra] == "(":
+                    self.AgregarToken(cadena)
+                    self.salida += entrada[letra]
+                    self.col += 1
+                    estado = 0
                 elif entrada[letra] == ")":
                     self.AgregarToken(cadena)
                     self.salida += entrada[letra]
@@ -764,6 +769,7 @@ class AnalizadorLexicoJS():
                         "\n"\
 
         return contenido
+    
     ####################
 
     def AgregarError(self, caracter, fila, col):
