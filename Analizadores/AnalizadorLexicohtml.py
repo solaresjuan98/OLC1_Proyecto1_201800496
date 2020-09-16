@@ -73,6 +73,9 @@ class AnalizadorLexicohtml():
         self.estado = 0
         self.fila = 1
         self.col = 1
+        # bandera de archivo
+        self.bandera = False
+        # ruta donde se almacenara la salida
         self.rutaSalida = ""
 
     #####################
@@ -524,7 +527,7 @@ class AnalizadorLexicohtml():
                 if self.VerificarRuta(aux, 'PATHW:'):
 
                     cadena.replace("PATHW:", "")
-                    
+                    self.bandera = True
                 cadena = ""
                 estado = 0
 
@@ -673,14 +676,28 @@ class AnalizadorLexicohtml():
         aux = p1.replace(p2, "")
         ruta = ""
         ruta = aux.replace(" ", "")
-        ruta = ruta.replace("\\\\\\", "\\")
+        ruta = ruta.replace("\\\\", "")
+        directorio = ""
         print(ruta)
+        #directorio = ruta
+        #directorio = os.path.join(directorio)
+        
         try:
             if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
-                self.rutaSalida = ruta
-                archivo = open(ruta, "w+")
+                
+                directorio = ""
+                directorio = ruta
+                directorio = os.path.join(directorio)
+
+                if not os.path.exists(directorio):
+                    print("creado")
+                    os.mkdir(directorio)
+
+                self.rutaSalida = directorio
+                # self.rutaSalida = ruta
+                """archivo = open(ruta, "w+")
                 archivo.write("prueba jeje")
-                archivo.close()
+                archivo.close()"""
         except IndexError:
             pass
 
@@ -689,10 +706,18 @@ class AnalizadorLexicohtml():
     ####################
 
     def GenerarSalida(self):
+        
+        archivo = "\\salida.html"
+        rutafinal = ""
+        rutafinal += self.rutaSalida
+        rutafinal += archivo
 
-        salida = open(self.rutaSalida, "w")
-        salida.write(self.salida)
-        salida.close()
+        output = open(rutafinal, "w+")
+
+        output.write(self.salida)
+
+        output.close()
+        
 
     ####################
 

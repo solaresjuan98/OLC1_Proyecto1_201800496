@@ -107,6 +107,10 @@ class AnalizadorLexicoJS():
         self.col = 1
         # cadena donde se limpia el archivo
         self.archivo_salida = ""
+        # directorio donde se almacenará la salida 
+        self.dir_salida = ""
+        # bandera archivos
+        self.bandArchivo = False
 
     ####################
 
@@ -358,9 +362,10 @@ class AnalizadorLexicoJS():
                     self.listaTokens.append(
                         [token_.ObtenerTipoTokenJS(), cadena])
 
-                    if self.VerificarRuta(cadena, 'PATHW:'):
+                    if self.VerificarRuta(cadena, 'PATHW:') and self.bandArchivo == False:
                         # reemplazar la cadena
                         cadena.replace("PATHW:", "")
+                        self.bandArchivo = True
                     #########
                     cadena = ""
                     estado = 0
@@ -992,17 +997,31 @@ class AnalizadorLexicoJS():
 
     def VerificarRuta(self, p1, p2):
         aux = p1.replace(p2, "")
-        print("aux: ", aux)
+        #print("aux: ", aux)
         ruta = ""
         ruta = aux.replace(" ", "")
-        print("Ruta: ", ruta)
-        ruta = ruta.replace("\\\\\\", "\\")
+        #print("Ruta: ", ruta)
+        ruta = ruta.replace("\\\\", "")
         print(ruta)
         try:
-            if ruta[0] == "c" or ruta[0] == "C" and ruta[1] == ":":
-                archivo = open(ruta, "w+")
-                archivo.write("prueba jeje")
-                archivo.close()
+            if (ruta[0] == "c" or ruta[0] == "C") and ruta[1] == ":":
+                #dir = ruta.replace("\\", "")
+                directorio = ""
+                directorio = ruta
+                #directorio = ruta.replace("\\", "")
+                directorio = os.path.join(directorio)
+                print(directorio)
+
+                if not os.path.exists(directorio):
+                    print("creado")
+                    os.mkdir(directorio)
+                
+            
+                self.dir_salida = directorio
+
+                #archivo = open(ruta, "w+")
+                #archivo.write("prueba jeje")
+                #archivo.close()
 
         except IndexError:
             pass
@@ -1017,7 +1036,13 @@ class AnalizadorLexicoJS():
     ####################
 
     def GenerarSalida(self):
-        output = open("Reportes/salida.js", "w+")
+        
+        archivo = "\\salida.js"
+        rutafinal = ""
+        rutafinal += self.dir_salida
+        rutafinal += archivo
+
+        output = open(rutafinal, "w+")
 
         output.write(self.salida.replace("@", "", -1).replace("|", "", -1))
 
@@ -1112,6 +1137,7 @@ class AnalizadorLexicoJS():
         os.system('cmd /c "dot -Tjpg grafo_cadena.txt -o grafoCadena.jpg"')
 
     ####################
+
     def GenerarReporte(self):
         # Generar reporte de errores y crea el archivo de acuerdo al directorio dado al inicio del archivo JS
         contador = 1  # contador del numero de errores
