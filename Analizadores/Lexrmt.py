@@ -47,16 +47,31 @@ class Lexrmt():
             #expresion = ""
             if entrada[letra].isdigit():
                 expresion += entrada[letra]
+            
+            ##
             elif entrada[letra].isalpha():
                 expresion += entrada[letra]
+            
+            ##
             elif entrada[letra] == "+" or entrada[letra] == "-" or entrada[letra] == "/"  or entrada[letra] == "*":
                 expresion += entrada[letra]
+            
+            ##
             elif entrada[letra] == "(" or entrada[letra] == ")":
                 expresion += entrada[letra]
-            elif entrada[letra] == "\n":
-                #print(expresion)
-                ## 
+            
+            ##
+            elif entrada[letra] == "_":
                 expresion += entrada[letra]
+            
+            ##
+            elif entrada[letra] == ".":
+                expresion += entrada[letra]
+            
+            ##
+            elif entrada[letra] == "\n":
+                expresion += entrada[letra]
+                print(expresion)
                 self.listaExpr.append(expresion)
                 expresion = ""
             """

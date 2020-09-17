@@ -90,11 +90,10 @@ class AnalizadorLexicohtml():
                 Estados de aceptación de tokens HTML
                 estado 4 -> etiquetas html
                 estado 5 -> texto que esta entra las etiquetas de apertura y de cierre
-
             """
             # ESTADOS DE ANALIZADOR LEXICO
             if estado == 0:
-                print("Estoy en estado 0 ", entrada[letra])
+                #print("Estoy en estado 0 ", entrada[letra])
                 cadena = ""
                 range(len(entrada) - 1)
                 if entrada[letra] == "<":
@@ -200,7 +199,7 @@ class AnalizadorLexicohtml():
                     estado = 7
             ##
             elif estado == 2:
-                print("Estoy en estado 2", entrada[letra])
+                #print("Estoy en estado 2", entrada[letra])
                 if entrada[letra].isalpha():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -272,6 +271,7 @@ class AnalizadorLexicohtml():
                 if entrada[letra].isalpha():
                     self.AgregarToken(cadena)
                     cadena = ""
+                    self.salida += entrada[letra]
                     cadena += entrada[letra]
                     estado = 5
                 else:
@@ -282,12 +282,21 @@ class AnalizadorLexicohtml():
                     estado = 0
 
                     if entrada[letra].isalpha():
+                        self.salida += entrada[letra]
                         cadena += entrada[letra]
                         estado = 5
+
+                    elif entrada[letra] == "<":
+                        cadena += entrada[letra]
+                        self.salida += entrada[letra]
+                    
+                    elif entrada[letra] == ">":
+                        cadena += entrada[letra]
+                        self.salida += entrada[letra]
             ##
             elif estado == 5:
                 #print("Estoy en estado 5")
-                print("Estoy en estado 5 ", entrada[letra])
+                #print("Estoy en estado 5 ", entrada[letra])
                 if entrada[letra].isalpha() or entrada[letra].isdigit():
                     cadena += entrada[letra]
                     self.salida += entrada[letra]
@@ -707,18 +716,17 @@ class AnalizadorLexicohtml():
 
     def GenerarSalida(self):
         
-        archivo = "\\salida.html"
+        archivo = "salida.html"
         rutafinal = ""
         rutafinal += self.rutaSalida
         rutafinal += archivo
 
-        output = open(rutafinal, "w+")
+        output = open(rutafinal, "w")
 
         output.write(self.salida)
 
         output.close()
         
-
     ####################
 
     def imprimirListaTokens(self):

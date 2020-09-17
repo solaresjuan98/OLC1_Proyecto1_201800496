@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox as MessageBox
 from io import open
 from tkinter import filedialog
+from tkinter.filedialog import asksaveasfile
 import os
 import re
 
@@ -13,7 +14,6 @@ from Analizadores.AnalizadorLexicohtml import *
 from Analizadores.Lexrmt import *
 
 # Analizador sintactico de expresiones
-from Analizadores.AnalizadorSintactico import *
 from Analizadores.Sintactico import *
 
 textoArchivo = ""
@@ -55,7 +55,7 @@ def analizarEntrada():
     ext = labelFormato['text']
 
     if ext == ".js":
-  
+
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo(
             "Aviso", "Analisis del archivo JavaScript iniciado")
@@ -69,7 +69,7 @@ def analizarEntrada():
         textoSalida.insert(INSERT, "\t :: LISTADO DE TOKENS :: \n")
         textoSalida.insert(INSERT, tokens)
         print(analizadorJS.fila)
-    
+
     elif ext == ".css":
 
         entrada = textoEntrada.get("1.0", "end-1c")
@@ -84,7 +84,7 @@ def analizarEntrada():
         textoSalida.insert(INSERT, bitacora)
         # print(bitacora)
         print(analizadorCSS.fila)
-    
+
     elif ext == ".html":
 
         entrada = textoEntrada.get("1.0", "end-1c")
@@ -97,9 +97,9 @@ def analizarEntrada():
         analizadorHTML.GenerarReporteErrores()
         analizadorHTML.GenerarSalida()
         print(analizadorHTML.fila)
-        
+
     elif ext == ".rmt":
-       
+
         entrada = textoEntrada.get("1.0", "end-1c")
         MessageBox.showinfo("Aviso", "Analisis del archivo rmt iniciado")
         analizadorRMT = Lexrmt()
@@ -108,15 +108,28 @@ def analizarEntrada():
         # Iniciar analisis sintactico
         sintactico = Sintactico()
         sintactico.Parse(analizadorRMT.listaExpr)
-        #print(sintactico.pilaVacia())
+        # print(sintactico.pilaVacia())
         resultadoSintactico = sintactico.mostrarReporte()
         textoSalida.insert(INSERT, resultadoSintactico)
         sintactico.GenerarReporteErrores()
         #sintactico = AnalizadorSintactico()
-        #sintactico.Parsear(analizadorRMT.ListaTokens)
-    
+        # sintactico.Parsear(analizadorRMT.ListaTokens)
+
     else:
         print("Formato no permitido / archivo no cargado")
+
+#######################
+
+def guardarArchivo():
+
+    archivos = [('Archivos Javascript', '*.js'), ('Archivos CSS', '*.css'),
+                ('Archivos HTML', '*.html'), ('Archivos rmt', '*.rmt')]
+
+    archivo = asksaveasfile(mode='w', filetypes=archivos,
+                            defaultextension=archivos)
+    archivoDestino = textoEntrada.get(1.0, END)
+    archivo.write(archivoDestino)
+    archivo.close()
 
 #######################
 
@@ -143,8 +156,7 @@ filemenu = Menu(barraMenu)
 filemenu = Menu(barraMenu, tearoff=0)
 filemenu.add_command(label="Nuevo")
 filemenu.add_command(label="Abrir", command=abrirArchivo)
-filemenu.add_command(label="Guardar")
-filemenu.add_command(label="Guardar como...")
+filemenu.add_command(label="Guardar", command=guardarArchivo)
 filemenu.add_separator()
 filemenu.add_command(label="Salir")
 
@@ -171,28 +183,28 @@ labelFormato = Label(ventana, text="")
 labelFormato.place(x=120, y=10)
 labelFormato.config(padx=5, pady=5, font=("sans-serif", 10))
 
-## scroll bar1 
+# scroll bar1
 scrollbar1 = Scrollbar(ventana)
-scrollbar1.pack(side=RIGHT, fill = Y)
+scrollbar1.pack(side=RIGHT, fill=Y)
 
-## CAJA TEXTO ENTRADA 
+# CAJA TEXTO ENTRADA
 textoEntrada = Text(ventana)
 textoEntrada.place(x=10, y=60)
 textoEntrada.insert(INSERT, textoArchivo)
 textoEntrada.config(width=65, height=35, font=("Consolas", 9),
-                    padx=5, pady=5 , yscrollcommand=scrollbar1.set)
+                    padx=5, pady=5, yscrollcommand=scrollbar1.set)
 scrollbar1.config(command=textoEntrada.yview)
 
 
-## scroll bar1 
+# scroll bar1
 scrollbar2 = Scrollbar(ventana)
-scrollbar2.pack(side=RIGHT, fill =Y)
+scrollbar2.pack(side=RIGHT, fill=Y)
 
-## CAJA TEXTO QUE MUESTRA LA SALIDA
+# CAJA TEXTO QUE MUESTRA LA SALIDA
 textoSalida = Text(ventana)
 textoSalida.place(x=505, y=60)
 textoSalida.config(width=60, height=35, font=("Consolas", 9),
-                   padx=5, pady=5,yscrollcommand=scrollbar2.set)
+                   padx=5, pady=5, yscrollcommand=scrollbar2.set)
 scrollbar2.config(command=textoSalida.yview)
 
 

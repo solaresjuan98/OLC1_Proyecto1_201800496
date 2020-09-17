@@ -1,0 +1,7 @@
+digraph G { 
+q0 -> q1 [label= "0" ] 
+q1 -> q1 [label= "." ] 
+q1 -> q1 [label= "0" ] 
+q1[peripheries=2] 
+{ rank = "same"; q0; q1; }
+}

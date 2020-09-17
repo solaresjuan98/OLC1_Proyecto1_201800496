@@ -18,34 +18,72 @@ class Sintactico():
         self.pila.insert(0, t)
 
     def desapilar(self):
-        self.pila.pop(0)
+
+        try:
+            return self.pila.pop(0)
+        except:
+            print("Error de pila")
 
     def Parse(self, lista):
         #elemento = lista[1]
+        self.pila = []
+
         try:
             for expresion in lista:
                 print(" >> Expresion a evaluar", expresion)
                 for caracter in range(len(expresion)):
                     
                     if (expresion[caracter] == "+" or expresion[caracter] == "-" or expresion[caracter] == "/" or expresion[caracter] == "*") and (expresion[caracter+1] == "+" or expresion[caracter+1] == "-" or expresion[caracter+1] == "*" or expresion[caracter+1] == "/"):
+                        
                         print("error")
                         ## mandarlo como error
                         self.listaReporte.append([expresion, "INCORRECTO"])
                         self.pila = []
                         break
+                    
+                    ##
                     elif expresion[caracter] == "(":
+                    
                         print("apilando")
                         self.apilar("-")
+                    
+                    ##
                     elif expresion[caracter] == ")":
+                    
                         print("desapilando")
                         self.desapilar()
+                    
+                    ##
                     elif (expresion[caracter] == "(") and (expresion[caracter+1] == "+" or expresion[caracter+1] == "-" or expresion[caracter+1] == "*" or expresion[caracter+1] == "/"): 
+                    
                         self.listaReporte.append([expresion, "INCORRECTO"])
                         self.pila = []
                         break
+                    
+                    ## Se viene un punto y luego viene otro punto
+                    elif (expresion[caracter] == ".") and (expresion[caracter+1] == "."): 
+                    
+                        self.listaReporte.append([expresion, "INCORRECTO"])
+                        self.pila = []
+                        break
+                    
+                    ## Si viene un punto y luego viene una letra
+                    elif (expresion[caracter] == ".") and (expresion[caracter+1].isalpha()): 
+                    
+                        self.listaReporte.append([expresion, "INCORRECTO"])
+                        self.pila = []
+                        break
+                    
+                    ## Si viene una letra y luego un punto
+                    elif (expresion[caracter].isalpha()) and (expresion[caracter+1] == "."): 
+                    
+                        self.listaReporte.append([expresion, "INCORRECTO"])
+                        self.pila = []
+                        break
+
+                    ##
                     elif expresion[caracter] == "\n":
-                        ## en esta parte validar parentesis
-                
+                        ## en esta parte validar la pila de parentesis
                         if self.pilaVacia:
                             self.listaReporte.append([expresion, "CORRECTO"])
                             self.pila = []
@@ -59,11 +97,16 @@ class Sintactico():
 
     def mostrarReporte(self):
         result = ""
+        contador = 1
         for resultado in self.listaReporte:
             
-            result += resultado[0]
+            result += " >> Expresion No.: "
+            result += str(contador)
+            result += "  "
             result += resultado[1]
-
+            result += "\n"
+            
+            contador += 1 
         return result
 
     def GenerarReporteErrores(self):

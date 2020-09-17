@@ -1,0 +1,32 @@
+/* PATHW: C:\output\css */
+
+* {
+    background-color: aqua;
+}
+
+.clase {
+    background: #cccccc;
+}
+
+d {
+    padding: 4px;
+}
+
+.clase2, .MiClase {
+    font: 100;
+}
+
+texto-centrado {
+    text-align: center;
+}
+
+#linkenlace-web {
+    color: yellow;
+    font-size: 4em;
+    position: absolute;
+    top: 600px
+}
+
+.textorojo {
+    color: red;
+}

@@ -1037,7 +1037,7 @@ class AnalizadorLexicoJS():
 
     def GenerarSalida(self):
         
-        archivo = "\\salida.js"
+        archivo = "salida.js"
         rutafinal = ""
         rutafinal += self.dir_salida
         rutafinal += archivo
@@ -1070,7 +1070,7 @@ class AnalizadorLexicoJS():
         graph.write("}")
         graph.close()
         os.system('cmd /c "dot -Tjpg grafo.txt -o grafoID.jpg"')
-
+        os.startfile("grafoID.jpg")
     ####################
 
     def ver_subcadena(self, s, w):
@@ -1113,7 +1113,7 @@ class AnalizadorLexicoJS():
         graph.write("}")
         graph.close()
         os.system('cmd /c "dot -Tjpg grafo_numero.txt -o grafo_numero.jpg"')
-
+        os.startfile("grafo_numero.jpg")
     ####################
 
     def GenerarGrafoCadenaTexto(self, cadena):
@@ -1125,17 +1125,18 @@ class AnalizadorLexicoJS():
         aux2 = cadena[1:-1]
         aux3 = cadena[-1]
 
-        graph.write("q0 -> q1 [label= \"" + aux1 + "\" ]; \n")
+        graph.write("q0 -> q1 [label= \"" + "Comilla simple/doble" + "\" ]; \n")
 
         for letra in aux2:
+            
             graph.write("q1 -> q1 [label = \""+letra + "\"]; \n")
 
-        graph.write("q1 -> q2 [label= \"" + aux3 + "\" ]; \n")
+        graph.write("q1 -> q2 [label= \"" + "Comilla simple/doble" + "\" ]; \n")
         graph.write("q2[peripheries=2] \n")
         graph.write("}")
         graph.close()
         os.system('cmd /c "dot -Tjpg grafo_cadena.txt -o grafoCadena.jpg"')
-
+        os.startfile("grafoCadena.jpg")
     ####################
 
     def GenerarReporte(self):

@@ -1,5 +1,5 @@
 digraph G { 
-q0 -> q1 [label= """ ]; 
+q0 -> q1 [label= "Comilla simple/doble" ]; 
 q1 -> q1 [label = "L"]; 
 q1 -> q1 [label = "a"]; 
 q1 -> q1 [label = " "]; 
@@ -22,6 +22,6 @@ q1 -> q1 [label = "e"];
 q1 -> q1 [label = "s"]; 
 q1 -> q1 [label = ":"]; 
 q1 -> q1 [label = " "]; 
-q1 -> q2 [label= """ ]; 
+q1 -> q2 [label= "Comilla simple/doble" ]; 
 q2[peripheries=2] 
 }

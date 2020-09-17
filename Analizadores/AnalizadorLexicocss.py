@@ -1275,6 +1275,7 @@ class AnalizadorLexicocss():
                     print("creado")
                     os.mkdir(directorio)
 
+                self.dir_salida = directorio
                 #archivo = open(ruta, "w+")
                 #archivo.write("prueba jeje")
                 #archivo.close()
@@ -1369,7 +1370,7 @@ class AnalizadorLexicocss():
 
     def GenerarArchivoSalida(self):
 
-        archivo = "\\salida.css"
+        archivo = "salida.css"
         rutafinal = ""
         rutafinal += self.dir_salida
         rutafinal += archivo
